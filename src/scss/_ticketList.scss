@@ -1,0 +1,40 @@
+.ticket__list {
+  display: flex;
+  flex-direction: column;
+  
+  &__title {
+    margin-bottom: 32px;
+  }
+  .ticket__features {
+    display: flex;
+    height: 48px;
+    justify-content: space-between;
+    margin-bottom: 31px;
+  }
+  &__search {
+    background-color: $gray-light;
+  }
+  &__action {
+    display: flex;
+    gap: 10px;
+    button {
+      height: 100%;
+      font-weight: 700;
+      font-size: 18px;
+      border: 1px solid $orange-yellow;
+      border-radius: 10px;
+      color: $orange-yellow;
+      background-color: white;
+      cursor: pointer;
+      font-style: normal;
+      padding: 0 15px;
+      display: flex;
+      align-items: center;
+      i {
+        margin-right: 12px;
+        font-size: 22px;
+      }
+    }
+  }
+}
+

@@ -1,0 +1,91 @@
+.home {
+  
+  &__title {
+    margin-bottom: 32px;
+  }
+  &__profit {
+    display: flex;
+    justify-content: space-between;
+    p {
+        margin-bottom: 27px;
+    }
+    &__date {
+    }
+  }
+  .home__chart {
+    height: 274px;
+    background-color: $gray;
+  }
+  .home__revenue {
+    margin: 40px 0 83px 0;
+    p,
+    span {
+      font-weight: 500;
+      font-size: 14px;
+    }
+    p:first-child {
+      line-height: 22px;
+      color: $text-light;
+      opacity: 0.5;
+    }
+    p:last-child {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 30px;
+      span {
+      }
+    }
+  }
+  .home__package {
+    display: flex;
+    justify-content: space-between;
+    &__chart {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      
+      .home__chart__title {
+        margin-bottom: 25px;
+      }
+      .home__chart__pie {
+        width: 246px;
+        height: 246px;
+        border-radius: 50%;
+        background-color: blue;
+        position: relative;
+      }
+      .home__chart__note {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        span {
+          font-size: 14px;
+          font-weight: 400;
+        }
+        .chart__note__unused,
+        .chart__note__used {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          span:first-child {
+            width: 44px;
+            height: 20px;
+            border-radius: 4px;
+            background-color: beige;
+            display: inline-block;
+          }
+        }
+        .chart__note__used {
+          span:first-child {
+            background-color: $blue;
+          }
+        }
+        .chart__note__unused {
+            span:first-child {
+                background-color: $orange;
+              }
+        }
+      }
+    }
+  }
+}

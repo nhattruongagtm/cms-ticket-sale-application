@@ -1,0 +1,76 @@
+.check__ticket {
+  flex-grow: 1;
+  display: flex;
+  gap: 24px;
+
+  &__main {
+    width: calc(1097px - 48px);
+    border-radius: 24px;
+    background-color: white;
+    padding: 24px;
+    height: calc(963px - 48px);
+
+    .check__features {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .check__ticket__action {
+      button {
+        background-color: $orange-yellow;
+        color: white;
+        font-weight: 700;
+        font-size: 18px;
+        border-radius: 8px;
+        padding: 11px 24px;
+        cursor: pointer;
+      }
+    }
+  }
+  &__filter {
+    border-radius: 24px;
+    background-color: white;
+    padding: 24px;
+    height: calc(963px - 48px);
+    flex-grow: 1;
+
+    .check__filter__title {
+      font-size: 24px;
+      line-height: 30px;
+      font-weight: 700px;
+      margin-bottom: 32px;
+    }
+    .check__filter__main {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px 0;
+      margin-bottom: 40px;
+      p {
+        font-size: 16px;
+        line-height: 26px;
+        font-weight: 600;
+      }
+      p.f{
+        display: flex;
+        align-items: center;
+      }
+      span {
+        font-weight: 500;
+        line-height: 19.5px;
+        font-size: 16px;
+        font-style: normal;
+      }
+
+      .check__filter__checkbox {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        label {
+          display: block;
+        }
+      }
+    }
+  }
+}
