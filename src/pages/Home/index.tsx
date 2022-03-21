@@ -1,5 +1,5 @@
-import { DatePicker } from "antd";
 import React from "react";
+import DatePicker from "../../components/DatePicker";
 
 type Props = {};
 
@@ -14,9 +14,7 @@ const Home = (props: Props) => {
         <p className="home__title title">Thống kê</p>
         <div className="home__profit">
           <p className="sub__title home__profit__title">Doanh thu</p>
-          <div className="home__profit__date">
-            <DatePicker onChange={onChange} />
-          </div>
+          <DatePicker/>
         </div>
         <div className="home__chart"></div>
         <div className="home__revenue">
@@ -27,7 +25,9 @@ const Home = (props: Props) => {
         </div>
         <div className="home__package">
           <div className="home__package__date">
-            <DatePicker onChange={onChange} />
+
+         <DatePicker/>
+            
           </div>
           <div className="home__package__chart">
             <p className="home__chart__title sub__title">Gói gia đình</p>

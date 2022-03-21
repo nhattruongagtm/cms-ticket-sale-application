@@ -1,6 +1,7 @@
 .ticket__list {
   display: flex;
   flex-direction: column;
+  height: 100%;
   
   &__title {
     margin-bottom: 32px;
@@ -34,6 +35,11 @@
         margin-right: 12px;
         font-size: 22px;
       }
+    }
+    .button--fill{
+      background-color: $orange-yellow;
+      color: white;
+      padding: 11px 24px;
     }
   }
 }

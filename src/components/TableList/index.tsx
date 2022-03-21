@@ -1,100 +1,77 @@
 import React from "react";
+import TicketListItem from "../../pages/TicketList/TicketListItem";
+import { TicketPackage } from "../../slice/EditSlice";
 
-interface Props {}
+interface Date {
+  day: number;
+  month: number;
+  year: number;
+}
+interface Time {
+  hour: number;
+  minute: number;
+  second: number;
+}
+export interface TicketListData {
+  bookingCode: string;
+  status: number;
+  ticketNumber: number;
+  usingDate: Date;
+  exportDate: Date;
+  checkInPort: number;
+}
+export interface CheckingTicketData {
+  ticketNumber: string;
+  usingDate: Date;
+  typeName: string;
+  checkInPort: number;
+  status: number;
+}
 
-const TableList = (props: Props) => {
+export interface PackageListData {
+  packageID: string;
+  packageName: string;
+  applyDate: Date & Time;
+  expireDate: Date & Time;
+  ticketPrice: number;
+  comboPrice: number;
+  status: number;
+}
+
+export interface DataTable {
+  label: string[];
+  data: TicketListData[] | CheckingTicketData[] | TicketPackage[];
+}
+
+interface Props {
+  dataTable: DataTable;
+  type: number;
+}
+
+const TableList = ({ dataTable,type }: Props) => {
   return (
     <div className="table__list">
       <table>
         <thead>
           <tr className="thead-list">
             <td className="tb__stt">STT</td>
-            <td className="tb__code">Booking code</td>
+            {/* <td className="tb__code">Booking code</td>
             <td className="tb__quantity">Số vé</td>
             <td className="tb__name">Tên sự kiện</td>
             <td className="tb__ status">Tình trạng sử dụng</td>
             <td className="tb__expire">Ngày sử dụng</td>
             <td className="tb__start">Ngày xuất vé</td>
-            <td className="port">Cổng Check-in</td>
-            <td className="port"></td>
+            <td className="port">Cổng Check-in</td> */}
+            {dataTable.label.map((item, index) => (
+              <td key={index}>{item}</td>
+            ))}
+            <td></td>
           </tr>
         </thead>
         <tbody>
-          <tr className="body-list">
-            <td className="tb__stt">1</td>
-            <td className="tb__code">
-              <p>ALT20210501</p>
-            </td>
-            <td className="tb__quantity">
-              <p>123456789034</p>
-            </td>
-            <td className="tb__name">
-              <p>Hội chợ triển lãm tiêu dùng 2021</p>
-            </td>
-            <td className="tb__status tb__status--expire">
-              <span></span> Hết hạn
-            </td>
-            <td className="tb__expire">
-              <p>14/04/2021</p>
-            </td>
-            <td className="tb__start">
-              <p>14/04/2021</p>
-            </td>
-            <td className="port">
-              <p>Cổng 1</p>
-            </td>
-            <td><i className='bx bx-dots-vertical-rounded'></i></td>
-          </tr>
-          <tr className="body-list">
-            <td className="tb__stt">1</td>
-            <td className="tb__code">
-              <p>ALT20210501</p>
-            </td>
-            <td className="tb__quantity">
-              <p>123456789034</p>
-            </td>
-            <td className="tb__name">
-              <p>Hội chợ triển lãm tiêu dùng 2021</p>
-            </td>
-            <td className="tb__status tb__status--unused">
-              <span></span> Chưa sử dụng
-            </td>
-            <td className="tb__expire">
-              <p>14/04/2021</p>
-            </td>
-            <td className="tb__start">
-              <p>14/04/2021</p>
-            </td>
-            <td className="port">
-              <p>Cổng 1</p>
-            </td>
-            <td><i className='bx bx-dots-vertical-rounded'></i></td>
-          </tr>
-          <tr className="body-list">
-            <td className="tb__stt">1</td>
-            <td className="tb__code">
-              <p>ALT20210501</p>
-            </td>
-            <td className="tb__quantity">
-              <p>123456789034</p>
-            </td>
-            <td className="tb__name">
-              <p>Hội chợ triển lãm tiêu dùng 2021</p>
-            </td>
-            <td className="tb__status tb__status--used">
-              <span></span> Đã sử dụng
-            </td>
-            <td className="tb__expire">
-              <p>14/04/2021</p>
-            </td>
-            <td className="tb__start">
-              <p>14/04/2021</p>
-            </td>
-            <td className="port">
-              <p>Cổng 1</p>
-            </td>
-            <td><i className='bx bx-dots-vertical-rounded'></i></td>
-          </tr>
+          {dataTable.data.map((item, index) => (
+            <TicketListItem data={item} index={index + 1} key={index} type={type}/>
+          ))}
         </tbody>
       </table>
     </div>

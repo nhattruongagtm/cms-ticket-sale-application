@@ -1,15 +1,30 @@
 import React from "react";
-import { Route, Routes } from "react-router";
+import { useSelector } from "react-redux";
 import Content from "./components/Content";
+import DatePicker from "./components/DatePicker";
 import Filter from "./components/Filter";
 import Header from "./components/Header";
 import SideBar from "./components/SideBar";
-import { RoutePath } from "./constants/routes";
-import Home from "./pages/Home";
+import TicketModal from "./components/TicketModal";
 // import 'antd/dist/antd.css';
 import "./scss/app.scss";
+import { ModalStatus } from "./slice/ModalSlice";
+import { RootState } from "./store";
 
 function App() {
+  const modalState = useSelector((state: RootState) => state.modal.modalState);
+
+  const Layer = () => {
+    return (
+      <div
+        className={
+          modalState !== ModalStatus.HIDDEN_MODAL
+            ? "layer layer--display"
+            : "layer"
+        }
+      ></div>
+    );
+  };
   return (
     <div className="app">
       <Header />
@@ -18,11 +33,10 @@ function App() {
         <SideBar />
         <Content />
       </div>
-      <div className="layer layer--dis play">
-
-      </div>
-      <Filter/>
-
+      <Layer />
+      <Filter />
+      <TicketModal />
+      {/* <DatePicker /> */}
     </div>
   );
 }

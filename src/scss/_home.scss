@@ -1,5 +1,4 @@
 .home {
-  
   &__title {
     margin-bottom: 32px;
   }
@@ -7,9 +6,41 @@
     display: flex;
     justify-content: space-between;
     p {
-        margin-bottom: 27px;
+      margin-bottom: 27px;
     }
     &__date {
+      width: 153px;
+      height: 38px;
+      border: 1px solid #e5e0e0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 13px;
+      font-size: 14px;
+      font-weight: 22px;
+      font-weight: 500;
+      border-radius: 8px;
+      i {
+        font-size: 25px;
+        color: $orange-yellow;
+      }
+    }
+    &__time {
+      width: calc(129px - 24px);
+      height: 20px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      select {
+        width: 83px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        text-indent: 1px;
+        text-overflow: "";
+      }
+
+      i {
+        font-size: 28px;
+      }
     }
   }
   .home__chart {
@@ -43,7 +74,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      
+
       .home__chart__title {
         margin-bottom: 25px;
       }
@@ -64,9 +95,9 @@
         }
         .chart__note__unused,
         .chart__note__used {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
           span:first-child {
             width: 44px;
             height: 20px;
@@ -81,9 +112,9 @@
           }
         }
         .chart__note__unused {
-            span:first-child {
-                background-color: $orange;
-              }
+          span:first-child {
+            background-color: $orange;
+          }
         }
       }
     }

@@ -1,4 +1,5 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { RoutePath } from "../../constants/routes";
 import { IRoute } from "../../routes/routes";
@@ -37,6 +38,7 @@ const SideBar = (props: Props) => {
             <span>{route.title}</span>
           </NavLink>
         ))}
+        {/* <li>Gói dịch vụ</li> */}
       </ul>
       <div className="sidebar__copyright">
         <p>

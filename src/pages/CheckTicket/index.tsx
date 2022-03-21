@@ -1,11 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import Pagination from "../../components/Pagination";
 import Radio from "../../components/Radio";
-import TableList from "../../components/TableList";
+import TableList, { DataTable } from "../../components/TableList";
 
 interface Props {}
 
+type CheckType = "all" | "uncheck" | "check";
+
 const CheckTicket = (props: Props) => {
+  const [check, setCheck] = useState<CheckType>("all");
+
+  const handleCheckTicket = (checkType: string) => {
+    setCheck(checkType as CheckType);
+  };
+
+  const dataList: DataTable = {
+    label: [
+      "Số vé",
+      "Ngày sử dụng",
+      "Tên loại vé",
+      "Cổng check-in",
+    ],
+    data: [
+      {
+        bookingCode: "ALTFGHJU",
+        status: 0,
+        ticketNumber: 454648,
+        usingDate: { day: 2, month: 2, year: 2022 },
+        exportDate: { day: 2, month: 2, year: 2022 },
+        checkInPort: 1,
+      },
+    ],
+  };
+
   return (
     <div className="check__ticket">
       <div className="check__ticket__main">
@@ -19,8 +46,8 @@ const CheckTicket = (props: Props) => {
             <button>Chốt đối soát</button>
           </div>
         </div>
-        <TableList/>
-        <Pagination/>
+        <TableList dataTable={dataList} type={1} />
+        <Pagination />
       </div>
       <div className="check__ticket__filter">
         <p className="check__filter__title">Lọc vé</p>
@@ -32,29 +59,36 @@ const CheckTicket = (props: Props) => {
               name="filter"
               text="Tất cả"
               value={"all"}
-              isChecked={true}
+              onChecked={handleCheckTicket}
+              isChecked={check === "all" ? true : false}
             />
             <Radio
               id="check"
               name="filter"
               text="Đã đối soát"
               value={"check"}
-              isChecked={false}
+              onChecked={handleCheckTicket}
+              isChecked={check === "check" ? true : false}
             />
             <Radio
               id="uncheck"
               name="filter"
               text="Chưa đối soát"
               value={"uncheck"}
-              isChecked={false}
+              onChecked={handleCheckTicket}
+              isChecked={check === "uncheck" ? true : false}
             />
           </div>
           <p>Loại vé</p>
           <span>Vé cổng</span>
           <p className="f">Từ ngày</p>
-          <div className="filter__date__picker"></div>
+          <div className="filter__date__pic filter--gray">
+            <span>01/05/2022</span> <i className="bx bx-calendar"></i>
+          </div>
           <p className="f">Đến ngày</p>
-          <div className="filter__date__picker"></div>
+          <div className="filter__date__pic filter--orange">
+            <span>dd/mm/yy</span> <i className="bx bx-calendar"></i>
+          </div>
         </div>
         <button className="button filter__btn">Lọc</button>
       </div>

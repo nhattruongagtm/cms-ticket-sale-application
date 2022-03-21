@@ -129,13 +129,28 @@ table {
 }
 
 button,
+select,
 input {
   outline: none;
   border: 0;
   font-weight: 400;
   font-family: $primary-font;
 }
-a{
-    text-decoration: none;
-    color: black;
+a {
+  text-decoration: none;
+  color: black;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-indent: 1px;
+  text-overflow: "";
+}
+
+body{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  
 }
