@@ -27,7 +27,7 @@ const Calendar = ({ top, left, onGetDate, isOpen }: Position) => {
   const dispatch = useDispatch();
 
   const handleGetRadio = (value: string) => {
-    setOptions(value as DateOption);
+    option !== value && setOptions(value as DateOption);
   };
 
   const getDaysOfMonth = (year: number, month: number) => {
@@ -53,13 +53,13 @@ const Calendar = ({ top, left, onGetDate, isOpen }: Position) => {
     };
   });
 
-  const prevMonth = getDaysOfMonth(dateTime.year, dateTime.month - 1);
+  const prevDay = getDaysOfMonth(dateTime.year, dateTime.month - 1);
 
   const [prevDate, setPrevDate] = useState<OtherTime>(() => {
     const prevDate = new Date(
       dateTime.year,
       dateTime.month - 1,
-      prevMonth
+      prevDay
     ).getDay();
 
     const nextDate = new Date(
@@ -72,38 +72,49 @@ const Calendar = ({ top, left, onGetDate, isOpen }: Position) => {
     };
   });
 
-  // useEffect(() => {
-  //   const prevDate = new Date(
-  //     dateTime.year,
-  //     dateTime.month - 1,
-  //     prevMonth
-  //   ).getDay();
+  useEffect(() => {
+    const prevClone = { ...dateTime };
+    const nextClone = { ...dateTime };
+    if (prevClone.month > 1) {
+      prevClone.month = prevClone.month - 1;
+    } else {
+      prevClone.month = 12;
+      prevClone.year = prevClone.year - 1;
+    }
+    // if (nextClone.month > 11) {
+    //   nextClone.month = 1;
+    //   nextClone.year = nextClone.year + 1;
+    // } else {
+    //   nextClone.month = nextClone.month + 1;
+    // }
 
-  //   const nextDate = new Date(
-  //     dateTime.year,
-  //     dateTime.month,
-  //     getDaysOfMonth(dateTime.year, dateTime.month)
-  //   ).getDay();
+    const prevDate =
+      new Date(prevClone.year, prevClone.month - 1, prevDay).getDay() + 1;
 
-  //   setPrevDate({ prev: prevDate + 1, next: 7 - nextDate });
-  // }, [dateTime]);
+    const nextDate = new Date(
+      nextClone.year,
+      nextClone.month - 1,
+      getDaysOfMonth(nextClone.year, nextClone.month)
+    ).getDay();
+
+    setPrevDate({ prev: prevDate, next: nextDate > 0 ? 7 - nextDate : 0 });
+  }, [dateTime]);
 
   const daysOfMonth = getDaysOfMonth(dateTime.year, dateTime.month);
 
   const getDateFromPrevDate = () => {
     const rs = [];
-    for (let i = prevMonth; i > prevMonth - prevDate.prev + 1; i--) {
+    for (let i = prevDay; i > prevDay - prevDate.prev + 1; i--) {
       rs.push(i);
     }
 
     return rs.reverse();
   };
 
-
   const handleChangeMonth = (type: -1 | 1) => {
     switch (type) {
       case -1:
-        if (dateTime.month > 2) {
+        if (dateTime.month > 1) {
           setDateTime({ ...dateTime, month: dateTime.month - 1 });
         } else {
           setDateTime({ ...dateTime, month: 12, year: dateTime.year - 1 });
@@ -121,18 +132,19 @@ const Calendar = ({ top, left, onGetDate, isOpen }: Position) => {
     }
   };
 
-  // useEffect(() => {
-  //   const datePicker = document.querySelector("#date__picker") as HTMLElement;
-  //   if (datePicker) {
-  //     // datePicker.style.top = `${top}%`;
-  //     // datePicker.style.left = `${left}px`;
-  //   }
-  // }, []);
+  useEffect(() => {
+    const datePicker = document.querySelector("#date__picker") as HTMLElement;
+    if (datePicker) {
+      // datePicker.style.top = `${top}%`;
+      // datePicker.style.left = `${left}px`;
+    }
+  }, []);
 
   const handleChooseDate = (index: number) => {
-    onGetDate({ ...dateTime, day: index })
+    onGetDate({ ...dateTime, day: index });
     setDateTime({ ...dateTime, day: index });
   };
+
   return (
     <>
       <div
@@ -159,7 +171,7 @@ const Calendar = ({ top, left, onGetDate, isOpen }: Position) => {
             id="picker__day"
             value={"day"}
             isChecked={option === "day" ? true : false}
-            name="date__picker"
+            name="a"
             text="Theo ngày"
             onChecked={handleGetRadio}
           />
@@ -167,7 +179,7 @@ const Calendar = ({ top, left, onGetDate, isOpen }: Position) => {
             id="picker__week"
             value={"week"}
             isChecked={option === "week" ? true : false}
-            name="date__picker"
+            name="b"
             text="Theo tuần"
             onChecked={handleGetRadio}
           />

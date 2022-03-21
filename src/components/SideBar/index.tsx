@@ -3,10 +3,11 @@ import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { RoutePath } from "../../constants/routes";
 import { IRoute } from "../../routes/routes";
-
+import { useLocation } from "react-router";
 type Props = {};
 
 const SideBar = (props: Props) => {
+  const location = useLocation().pathname;
   const routeList: IRoute[] = [
     {
       path: RoutePath.HOME_PAGE,
@@ -38,7 +39,9 @@ const SideBar = (props: Props) => {
             <span>{route.title}</span>
           </NavLink>
         ))}
-        {/* <li>Gói dịch vụ</li> */}
+        {location === RoutePath.SETTING_PAGE && (
+          <li>Gói dịch vụ</li>
+        )}
       </ul>
       <div className="sidebar__copyright">
         <p>

@@ -6,7 +6,7 @@ import Filter from "./components/Filter";
 import Header from "./components/Header";
 import SideBar from "./components/SideBar";
 import TicketModal from "./components/TicketModal";
-// import 'antd/dist/antd.css';
+// import 'antd/d ist/antd.css';
 import "./scss/app.scss";
 import { ModalStatus } from "./slice/ModalSlice";
 import { RootState } from "./store";

@@ -1,10 +1,10 @@
 .date__picker {
   position: absolute;
-  top: 25%;
+  top: 5%;
   left: 50%;
   transform: translate(-50%, -50%) scaleY(0.5);
   width: calc(370px - 64px);
-  height: calc(396px - 48px);
+  min-height: calc(396px - 48px);
   border-radius: 20px;
   background-color: white;
   padding: 24px 32px;

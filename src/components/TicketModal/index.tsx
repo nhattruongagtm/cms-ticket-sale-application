@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { TicketPackage } from "../../slice/EditSlice";
 import { hiddenModal, ModalStatus } from "../../slice/ModalSlice";
 import { AppDispatch, RootState } from "../../store";
 import Checkbox from "../Checkbox";
@@ -8,13 +9,29 @@ import TimePicker from "../TimePicker";
 
 type Props = {};
 
+type InputForm = Required<TicketPackage>;
+
 const TicketModal = (props: Props) => {
   const modalState = useSelector((state: RootState) => state.modal.modalState);
-  const editData = useSelector((state: RootState) => state.edit);
+  const editData = useSelector((state: RootState) => state.edit.edit);
 
   const dispatch: AppDispatch = useDispatch();
 
   const [packageType, setPackageType] = useState<number[]>([]);
+
+  const initialForm: InputForm = {
+    id: "",
+    name: "",
+    appliedDate: { day: 0, month: 0, year: 0 },
+    expireDate: { day: 0, month: 0, year: 0 },
+    appliedTime: { hour: 0, minute: 0, second: 0 },
+    expireTime: { hour: 0, minute: 0, second: 0 },
+    comboPrice: 0,
+    quantityForCombo: 0,
+    simplePrice: 0,
+    status: 0,
+  };
+  const [inputForm, setInputForm] = useState<InputForm>(initialForm);
 
   const handleCheckType = (type: number) => {
     if (packageType.length === 0) {
@@ -27,14 +44,24 @@ const TicketModal = (props: Props) => {
       }
     }
   };
+
+  const handleSubmitModal = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
+
+  useEffect(()=>{
+    setInputForm({...inputForm,...editData})
+  },[editData])
+
   return (
-    <div
+    <form
       className={
         modalState === ModalStatus.ADD_MODAL ||
         modalState === ModalStatus.UPDATE_MODAL
           ? "ticket__modal ticket__modal--display"
           : "ticket__modal"
       }
+      onSubmit={handleSubmitModal}
     >
       <p className="ticket__modal__title title__modal">
         {editData.id !== "" ? "Cập nhật thông tin gói" : "Thêm gói vé"}
@@ -49,6 +76,10 @@ const TicketModal = (props: Props) => {
               type="text"
               className="name__input"
               placeholder="Nhập mã sự kiện"
+              value={inputForm.id}
+              onChange={(e) =>
+                setInputForm({ ...inputForm, id: e.target.value })
+              }
             />
           </div>
         )}
@@ -59,7 +90,13 @@ const TicketModal = (props: Props) => {
           <input
             type="text"
             className="name__input"
-            placeholder={editData.id !== "" ? "Nhập tên sự kiện" : "Nhập tên gói vé"}
+            placeholder={
+              editData.id !== "" ? "Nhập tên sự kiện" : "Nhập tên gói vé"
+            }
+            value={inputForm.name}
+            onChange={(e) =>
+              setInputForm({ ...inputForm, name: e.target.value })
+            }
           />
         </div>
       </div>
@@ -92,24 +129,24 @@ const TicketModal = (props: Props) => {
         <div className="modal__price__item">
           <label htmlFor="simple__price">
             <div className="price__input__line">
-              {/* <input
-                type="checkbox"
-                name=""
-                id="simple__price"
-                className="price__input"
-              />{" "} */}
-              {/* <span>Vé lẻ (vnđ/vé) với giá</span> */}
               <Checkbox
                 id="simple__price"
                 isChecked={packageType.includes(1) ? true : false}
-                value="0"
+                value={"1"}
                 text="Vé lẻ (vnđ/vé) với giá"
                 onChecked={() => handleCheckType(1)}
               />
               <input
-                type="text"
+                type="number"
                 placeholder="Giá vé"
                 className="ticket__price"
+                value={inputForm.simplePrice > 0 ? inputForm.simplePrice : ""}
+                onChange={(e) =>
+                  setInputForm({
+                    ...inputForm,
+                    simplePrice: Number(e.target.value),
+                  })
+                }
               />{" "}
               <span>/ vé</span>
             </div>
@@ -126,15 +163,33 @@ const TicketModal = (props: Props) => {
                 onChecked={() => handleCheckType(2)}
               />
               <input
-                type="text"
+                type="number"
                 placeholder="Giá vé"
                 className="ticket__price"
+                value={inputForm.comboPrice > 0 ? inputForm.comboPrice : ""}
+                onChange={(e) =>
+                  setInputForm({
+                    ...inputForm,
+                    comboPrice: Number(e.target.value),
+                  })
+                }
               />{" "}
               <span>/</span>
               <input
-                type="text"
+                type="number"
                 placeholder="Giá vé"
                 className="ticket__price--short"
+                value={
+                  inputForm.quantityForCombo > 0
+                    ? inputForm.quantityForCombo
+                    : ""
+                }
+                onChange={(e) =>
+                  setInputForm({
+                    ...inputForm,
+                    quantityForCombo: Number(e.target.value),
+                  })
+                }
               />{" "}
               <span> vé</span>
             </div>
@@ -142,9 +197,16 @@ const TicketModal = (props: Props) => {
         </div>
         <div className="ticket__modal__status">
           <p className="sub__title">Tình trạng</p>
-          <select>
-            <option value="" key="">
+          <select
+            onChange={(e) =>
+              setInputForm({ ...inputForm, status: Number(e.target.value) })
+            }
+          >
+            <option value={0} >
               Đang áp dụng
+            </option>
+            <option value={1}>
+              Tắt
             </option>
           </select>
         </div>
@@ -158,7 +220,7 @@ const TicketModal = (props: Props) => {
           <button className="button button--fill">Lưu</button>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 
