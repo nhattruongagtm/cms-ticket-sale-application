@@ -5,14 +5,15 @@ export enum ModalStatus {
   ADD_MODAL = 1,
   UPDATE_MODAL = 2,
   FILTER_MODAL = 3,
+  CHANGE_DATE_MODAL = 4,
 }
-export interface IModalState{
-    modalState : number;
-    datePicker: boolean;
+export interface IModalState {
+  modalState: number;
+  datePicker: boolean;
 }
-const initialState:IModalState = {
-    modalState: ModalStatus.HIDDEN_MODAL,
-    datePicker: false
+const initialState: IModalState = {
+  modalState: ModalStatus.HIDDEN_MODAL,
+  datePicker: false,
 };
 
 const modelSlice = createSlice({
@@ -20,7 +21,6 @@ const modelSlice = createSlice({
   initialState,
   reducers: {
     displayAddModal: (state) => {
-        console.log(state)
       state.modalState = ModalStatus.ADD_MODAL;
     },
     displayUpdateModal: (state) => {
@@ -32,12 +32,15 @@ const modelSlice = createSlice({
     hiddenModal: (state) => {
       state.modalState = ModalStatus.HIDDEN_MODAL;
     },
-    displayDatePicker: (state) =>{
+    displayDatePicker: (state) => {
       state.datePicker = true;
     },
-    hiddenDatePicker: (state) =>{
+    hiddenDatePicker: (state) => {
       state.datePicker = false;
-    }
+    },
+    displayChangeDateModal: (state) => {
+      state.modalState = ModalStatus.CHANGE_DATE_MODAL;
+    },
   },
 });
 
@@ -46,8 +49,9 @@ export const {
   displayFilterModal,
   displayUpdateModal,
   hiddenModal,
-  displayDatePicker,hiddenDatePicker
-
+  displayDatePicker,
+  hiddenDatePicker,
+  displayChangeDateModal
 } = modelSlice.actions;
 
 export default modelSlice.reducer;

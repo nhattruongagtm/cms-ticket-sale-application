@@ -23,12 +23,20 @@ const CheckTicket = (props: Props) => {
     ],
     data: [
       {
-        bookingCode: "ALTFGHJU",
-        status: 0,
-        ticketNumber: 454648,
-        usingDate: { day: 2, month: 2, year: 2022 },
-        exportDate: { day: 2, month: 2, year: 2022 },
-        checkInPort: 1,
+      
+       ticketNumber: "ALT20210501",
+       typeName: "Hội chợ triễn lãm tiêu dùng",
+       usingDate: {day: 14,month: 4,year: 2022},
+       checkInPort: 1,
+       status: 0
+      },
+      {
+      
+       ticketNumber: "ALT20210502",
+       typeName: "Nhà hát kịch 2022",
+       usingDate: {day: 17,month: 7,year: 2022},
+       checkInPort: 2,
+       status: 0
       },
     ],
   };

@@ -2,12 +2,13 @@ import React, { useContext } from "react";
 import { useDispatch } from "react-redux";
 import {
   CheckingTicketData,
-  DataListContext,
-  PackageListData,
   TicketListData,
-} from "../../components/TableList";
-import { editTicket, TicketPackage } from "../../slice/EditSlice";
+  TicketPackage,
+} from "../../models/Ticket";
+
+import { editTicket } from "../../slice/EditSlice";
 import { displayUpdateModal } from "../../slice/ModalSlice";
+import { formatDate, formatTime } from "../../utils/dateTime";
 
 interface Props {
   data: TicketListData | CheckingTicketData | TicketPackage;
@@ -38,13 +39,13 @@ const TicketListItem = ({ data, index, type }: Props) => {
       <tr className="body-list">
         <td className="tb__stt">{index}</td>
         <td className="tb__code">
-          <p>ALT20210501</p>
+          <p>{data.bookingCode}</p>
         </td>
         <td className="tb__quantity">
-          <p>123456789034</p>
+          <p>{data.ticketNumber}</p>
         </td>
         <td className="tb__name">
-          <p>Hội chợ triển lãm tiêu dùng 2021</p>
+          <p>{data.name}</p>
         </td>
         <td
           className={`tb__status ${
@@ -63,13 +64,13 @@ const TicketListItem = ({ data, index, type }: Props) => {
             : "Hết hạn"}
         </td>
         <td className="tb__expire">
-          <p>14/04/2021</p>
+          <p>{formatDate(data.usingDate)}</p>
         </td>
         <td className="tb__start">
-          <p>14/04/2021</p>
+          <p>{formatDate(data.exportDate)}</p>
         </td>
         <td className="port">
-          <p>Cổng 1</p>
+          <p>Cổng {data.checkInPort}</p>
         </td>
         <td>
           <i className="bx bx-dots-vertical-rounded"></i>
@@ -82,21 +83,21 @@ const TicketListItem = ({ data, index, type }: Props) => {
       <tr className="body-list">
         <td className="tb__stt">{index}</td>
         <td className="tb__code">
-          <p>ALT20210501</p>
+          <p>{data.ticketNumber}</p>
         </td>
 
         <td className="tb__name">
-          <p>Hội chợ triển lãm tiêu dùng 2021</p>
+          <p>{data.typeName}</p>
         </td>
 
         <td className="tb__expire">
-          <p>14/04/2021</p>
+          <p>{formatDate(data.usingDate)}</p>
         </td>
 
         <td className="port">
-          <p>Cổng 1</p>
+          <p>Cổng {data.checkInPort}</p>
         </td>
-        <td></td>
+        <td className="checking__status">đã đối soát</td>
       </tr>
     );
   };
@@ -112,20 +113,22 @@ const TicketListItem = ({ data, index, type }: Props) => {
         </td>
         <td className="tb__expire tb__datetime">
           <p>
-            <span>{`${data.appliedDate.day}/${data.appliedDate.month}/${data.appliedDate.year}`}</span>
-            <span>{`${data.appliedTime.hour}:${data.appliedTime.minute}:${data.appliedTime.second}`}</span>
+            <span>{formatDate(data.appliedDate)}</span>
+            <span>{formatTime(data.appliedTime)}</span>
           </p>
         </td>
         <td className="tb__start tb__datetime">
           <p>
-            <span>{`${data.expireDate.day}/${data.expireDate.month}/${data.expireDate.year}`}</span>
-            <span>{`${data.expireTime.hour}:${data.expireTime.minute}:${data.expireTime.second}`}</span>
+            <span>{formatDate(data.expireDate)}</span>
+            <span>{formatTime(data.expireTime)}</span>
           </p>
         </td>
         <td className="tb__name">
           {data.simplePrice && data.simplePrice > 0 ? (
             <p>{data.simplePrice} VNĐ</p>
-          ): <></>}
+          ) : (
+            <></>
+          )}
         </td>
         <td className="port">
           {data.comboPrice && (

@@ -1,19 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DateTime } from "../../components/Calendar";
 import { Time } from "../../components/TimePicker";
+import { TicketPackage } from "../../models/Ticket";
 
-export interface TicketPackage {
-  id: string;
-  name: string;
-  appliedDate: DateTime;
-  appliedTime: Time;
-  expireDate: DateTime;
-  expireTime: Time;
-  status: number;
-  simplePrice?: number;
-  comboPrice?: number;
-  quantityForCombo?: number;
-}
 
 interface EditModal {
   edit: TicketPackage;

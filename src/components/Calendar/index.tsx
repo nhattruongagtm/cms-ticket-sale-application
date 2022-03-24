@@ -209,9 +209,9 @@ const Calendar = ({ top, left, onGetDate, isOpen }: Position) => {
               key={index}
               onClick={() => handleChooseDate(index + 1)}
               className={`${
-                new Date().getFullYear() === dateTime.year &&
-                new Date().getMonth() + 1 === dateTime.month &&
-                new Date().getDate() === index + 1
+                (new Date().getFullYear() === dateTime.year &&
+                  new Date().getMonth() + 1 === dateTime.month &&
+                  new Date().getDate() === index + 1) 
                   ? "active"
                   : ""
               }`}

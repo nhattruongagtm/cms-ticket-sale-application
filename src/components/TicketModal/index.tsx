@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { TicketPackage } from "../../slice/EditSlice";
+import { TicketPackage } from "../../models/Ticket";
 import { hiddenModal, ModalStatus } from "../../slice/ModalSlice";
 import { AppDispatch, RootState } from "../../store";
 import Checkbox from "../Checkbox";
