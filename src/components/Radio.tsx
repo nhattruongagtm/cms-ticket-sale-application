@@ -5,7 +5,7 @@ type Props = {
   id: string;
   text: string;
   value: string | number;
-  onChecked: (checkType: string) => void;
+  onChecked: (checkType: number) => void;
   isChecked: boolean;
 };
 
@@ -19,7 +19,7 @@ const Radio = ({ name, id, text, value, onChecked, isChecked }: Props) => {
         id={id}
         name={name}
         hidden
-        onChange={(e) => onChecked(e.target.value)}
+        onChange={(e) => onChecked(Number(e.target.value))}
         checked={isChecked}
       />
       <div className="radio">

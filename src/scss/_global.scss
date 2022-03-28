@@ -1,6 +1,6 @@
 body {
   font-size: 18px;
-  font-family: $primary-font;
+  font-family: $primary-font!important;  
 }
 
 .app {
@@ -56,7 +56,7 @@ button.button--fill {
   padding: 10px 14px 10px 16px;
   border-radius: 12px;
   background-color: $search-color;
-  height: calc(48px - 20px);
+  height: calc(48px);
   input {
     width: 361px;
     font-size: 16px;
@@ -115,7 +115,7 @@ button.button--fill {
 
         p {
           max-height: 30px;
-          max-width: 180px;
+          max-width: 200px;
           -webkit-line-clamp: 1;
           overflow: hidden;
           white-space: nowrap;
@@ -138,45 +138,8 @@ button.button--fill {
       td {
         border-collapse: collapse;
       }
-      .tb__status {
-        padding: 8px 12px;
-        border-radius: 4px;
-        display: flex;
-        gap: 8px;
-        width: fit-content;
-        border: 1px solid black;
-        align-items: center;
-        line-height: 14.63px;
-        span {
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-        }
-      }
-      .tb__status--expire {
-        border: 1px solid $expire-status;
-        color: $expire-status;
-        background-color: $expire-status-2;
-        span {
-          background-color: $expire-status;
-        }
-      }
-      .tb__status--used {
-        border: 1px solid $used-status;
-        background-color: $used-status-2;
-        color: $used-status;
-        span {
-          background-color: $used-status;
-        }
-      }
-      .tb__status--unused {
-        background-color: $unused-status-2;
-        color: $unused-status;
-        border: 1px solid $unused-status;
-        span {
-          background-color: $unused-status;
-        }
-      }
+      
+      // status--here
       .tb__expire {
       }
       .tb__start {
@@ -188,32 +151,8 @@ button.button--fill {
       .tb__start {
         // text-align: right;
       }
-      .tb__datetime {
-        p {
-          width: fit-content;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          line-height: 1;
-        }
-      }
-      .tb__edit {
-        p {
-          display: flex;
-          align-items: center;
-          width: fit-content;
-          color: $orange-yellow;
-          line-height: 1;
-          gap: 5px;
-          height: 20px;
-          i {
-            color: $orange-yellow;
-            font-size: 25px;
-            opacity: 1;
-          }
-        }
-      }
+      
+      
     }
   }
 
@@ -248,6 +187,77 @@ button.button--fill {
   line-height: 26px;
 }
 
+.tb__status {
+  padding: 8px 12px;
+  border-radius: 4px;
+  display: flex;
+  gap: 8px;
+  width: fit-content;
+  border: 1px solid black;
+  align-items: center;
+  line-height: 14.63px;
+  span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+}
+
+.tb__status--expire {
+  border: 1px solid $expire-status;
+  color: $expire-status;
+  background-color: $expire-status-2;
+  span {
+    background-color: $expire-status;
+  }
+}
+.tb__status--used {
+  border: 1px solid $used-status;
+  background-color: $used-status-2;
+  color: $used-status;
+  span {
+    background-color: $used-status;
+  }
+}
+.tb__status--unused {
+  background-color: $unused-status-2;
+  color: $unused-status;
+  border: 1px solid $unused-status;
+  span {
+    background-color: $unused-status;
+  }
+}
+
+.tb__datetime {
+  p {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+  }
+}
+
+.tb__edit {
+  cursor: pointer;
+
+  p {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    color: $orange-yellow;
+    line-height: 1;
+    gap: 5px;
+    height: 20px;
+    i {
+      color: $orange-yellow;
+      font-size: 25px;
+      opacity: 1;
+    }
+  }
+}
+
 .pagination {
   display: flex;
   align-items: center;
@@ -274,13 +284,19 @@ button.button--fill {
   li.paginate__item:hover,
   li.active {
     border: 1px solid $orange-yellow;
-    color: $orange-yellow;
+    color: $orange-yellow !important;
+  }
+  li.paginate__item:hover a,
+  li.active a {
+    color: $orange-yellow !important;
   }
   .prev {
     margin-right: 10px;
+    font-weight: bold;
   }
   .next {
     margin-left: 10px;
+    font-weight: bold;
   }
   .prev:hover,
   .prev.active,
@@ -311,8 +327,10 @@ button.button--fill {
   align-items: center;
   cursor: pointer;
   .radio {
-    width: 18px;
-    height: 18px;
+    width: 22px;
+    height: 22px;
+    // width: 18px;
+    // height: 18px;
     border: 2px solid $checkbox;
     border-radius: 50%;
     display: inline-flex;
@@ -475,6 +493,14 @@ button.button--fill {
     align-items: flex-end;
     gap: 18px;
   }
+}
+.status--checked{
+  // font-style: italic;
+  // color: $gray;
+}
+.status--uncheck{
+  // font-style: italic;
+  color: $expire-status;
 }
 
 @media screen and (max-width: 1540px) {

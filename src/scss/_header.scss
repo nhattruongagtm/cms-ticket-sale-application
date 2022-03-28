@@ -4,14 +4,16 @@
   align-items: center;
   // padding: 0 32px 0 33px;
   &__logo {
-    max-width: 133px;
+    min-width: 133px;
     max-height: 58px;
+    margin-right: 128px;
+
   }
   &__main {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-left: 155px;
+    // margin-left: 155px;
     flex-grow: 1;
   
     .header__notify {

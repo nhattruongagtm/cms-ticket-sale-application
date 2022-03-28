@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { getAllTickets } from "./api/crudData";
-import { generateTicket } from "./api/generateData";
+import { getAllTickets, getChartData } from "./api/crudData";
+import { generateTicket, generateTicketPackages } from "./api/generateData";
 import Content from "./components/Content";
 import DatePicker from "./components/DatePicker";
 import Filter from "./components/Filter";
@@ -9,18 +9,32 @@ import Header from "./components/Header";
 import SideBar from "./components/SideBar";
 import TicketModal from "./components/TicketModal";
 import ChangeDateModal from "./components/TicketModal/ChangeDateModal";
-// import 'antd/d ist/antd.css';
+import "antd/dist/antd.css";
 import "./scss/app.scss";
 import { ModalStatus } from "./slice/ModalSlice";
 import { RootState } from "./store";
+import { filter } from "./utils/filter";
 
 function App() {
   const modalState = useSelector((state: RootState) => state.modal.modalState);
-
-  useEffect(() => {
-    
-  }, []);
+  const filterParams = useSelector((state: RootState) => state.filter.filter);
   
+  useEffect(() => {
+    // filter({
+    //   checkInPorts: ["c__c1"],
+    //   status: 1,
+    // })
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((e) => {
+    //     console.log(e);
+    //   });
+    // generateTicket()
+    // generateTicketPackages()
+   
+  }, []);
+
   const Layer = () => {
     return (
       <div

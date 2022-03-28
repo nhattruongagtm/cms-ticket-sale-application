@@ -28,9 +28,24 @@ export const formatTime = (time: Time) => {
 export const formatDate = (date: DateTime) => {
   let rs = "";
 
-  rs += convert(date.day, ":");
-  rs += convert(date.month, ":");
+  rs += convert(date.day, "/");
+  rs += convert(date.month, "/");
   rs += convert(date.year, "");
 
   return rs;
+};
+
+export const compareTo = (dateFrom: DateTime, dateTo: DateTime) => {
+  if (dateFrom.year > dateTo.year) {
+    return false;
+  } else if (dateFrom.year === dateTo.year) {
+    if (dateFrom.month > dateTo.month) {
+      return false;
+    } else if (dateFrom.month === dateTo.month) {
+      if (dateFrom.day > dateTo.day) {
+        return false;
+      }
+    }
+  }
+  return true;
 };

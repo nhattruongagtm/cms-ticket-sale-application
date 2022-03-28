@@ -3,22 +3,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { displayDatePicker } from "../slice/ModalSlice";
 import { RootState } from "../store";
 import Calendar, { DateTime } from "./Calendar";
-interface Props {}
+interface Props {
+  onGetDate: (date: DateTime) => void;
+  type: 0 | 1;
+  date: DateTime;
+}
 
 interface Position {
   x: number;
   y: number;
 }
 
-const DatePicker = (props: Props) => {
-  const [date, setDate] = useState<DateTime>();
+const DatePicker = ({ onGetDate, type, date }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch = useDispatch();
   const [position, setPosition] = useState<Position>({ x: 0, y: 30 });
 
   const handleGetDate = (date: DateTime) => {
-    setDate(date);
-    setIsOpen(false)
+    setIsOpen(false);
+    onGetDate(date);
   };
 
   const handleOpen = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
@@ -32,13 +35,22 @@ const DatePicker = (props: Props) => {
   return (
     <div className="home__profit__date calendar" id="calender">
       <span onClick={handleOpen}>
-        {date ? (
+        {date.day !== 0 && type !== 0 ? (
           <>
-            {date.day < 10 ? `0${date.day}` : date.day}/{date.month < 10 ? `0${date.month}` : date.month}/{date.year}
+            {date.day < 10 ? `0${date.day}` : date.day}/
+            {date.month < 10 ? `0${date.month}` : date.month}/{date.year}
           </>
         ) : (
           <>
-            Tháng {new Date().getMonth() + 1}, {new Date().getFullYear()}
+            {date.month === 0 ? (
+              <>
+                Tháng {new Date().getMonth() + 1}, {new Date().getFullYear()}
+              </>
+            ) : (
+              <>
+                Tháng {date.month}, {date.year}
+              </>
+            )}
           </>
         )}
       </span>

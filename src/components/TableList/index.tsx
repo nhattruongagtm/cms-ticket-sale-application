@@ -7,8 +7,9 @@ import {
 import { LoadingContext } from "../../pages/TicketList";
 import TicketListItem from "../../pages/TicketList/TicketListItem";
 import Loading from "../Loading";
+import Pagination from "../Pagination";
 
-type DataListType = TicketListData[] | CheckingTicketData[] | TicketPackage[];
+export type DataListType = TicketListData[] | CheckingTicketData[] | TicketPackage[];
 export interface DataTable {
   label: string[];
   data: DataListType;
@@ -71,6 +72,7 @@ const TableList = ({ dataTable, type }: Props) => {
               type={type}
             />
           ))}
+           
         </tbody>
       </table>
     </div>

@@ -1,9 +1,9 @@
 .date__picker {
   position: absolute;
-  top: 5%;
+  top: 30%;
   left: 50%;
   transform: translate(-50%, -50%) scaleY(0.5);
-  width: calc(370px - 64px);
+  // width: calc(370px - 64px);
   min-height: calc(396px - 48px);
   border-radius: 20px;
   background-color: white;
@@ -56,7 +56,8 @@
 
   &__main {
     display: grid;
-    gap: 12px 14px;
+    // gap: 12px 14px;
+    gap: 12px 10px;
     grid-template-columns: repeat(7, 1fr);
 
     font-weight: 500;

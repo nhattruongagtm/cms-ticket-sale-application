@@ -5,7 +5,8 @@ import { RootState } from "../../store";
 import Radio from "../Radio";
 
 interface Props {}
-type DateOption = "day" | "week";
+type DateOption = 0 | 1;
+// 0 is day and 1 is week
 export interface DateTime {
   day: number;
   month: number;
@@ -22,11 +23,11 @@ export interface Position {
   isOpen: boolean;
 }
 const Calendar = ({ top, left, onGetDate, isOpen }: Position) => {
-  const [option, setOptions] = useState<DateOption>("day");
+  const [option, setOptions] = useState<DateOption>(0);
 
   const dispatch = useDispatch();
 
-  const handleGetRadio = (value: string) => {
+  const handleGetRadio = (value: number) => {
     option !== value && setOptions(value as DateOption);
   };
 
@@ -170,7 +171,7 @@ const Calendar = ({ top, left, onGetDate, isOpen }: Position) => {
           <Radio
             id="picker__day"
             value={"day"}
-            isChecked={option === "day" ? true : false}
+            isChecked={option === 0 ? true : false}
             name="a"
             text="Theo ngày"
             onChecked={handleGetRadio}
@@ -178,7 +179,7 @@ const Calendar = ({ top, left, onGetDate, isOpen }: Position) => {
           <Radio
             id="picker__week"
             value={"week"}
-            isChecked={option === "week" ? true : false}
+            isChecked={option === 1 ? true : false}
             name="b"
             text="Theo tuần"
             onChecked={handleGetRadio}

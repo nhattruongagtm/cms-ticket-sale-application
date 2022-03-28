@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { formatTime } from "../utils/dateTime";
-import TicketModal from "./TicketModal";
 
-interface Props {}
+interface Props {
+  time: Time,
+  onGetTime: (time: Time) => void
+}
 
 export interface Time {
   hour: number;
@@ -10,9 +12,9 @@ export interface Time {
   second: number;
 }
 
-const TimePicker = (props: Props) => {
-  const [time, setTime] = useState<Time>({ hour: 0, minute: 0, second: 0 });
+const TimePicker = ({time, onGetTime}: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
   return (
     <div className="home__profit__date home__profit__time time__picker__main">
       <span onClick={() => setIsOpen(!isOpen)}>
@@ -29,7 +31,7 @@ const TimePicker = (props: Props) => {
       >
         <div className="time__picker__item">
           {Array.from(new Array(24)).map((item, index) => (
-            <span className={index === time.hour ? "active" : ""} key={index} onClick={() => setTime({ ...time, hour: index })}>
+            <span className={index === time.hour ? "active" : ""} key={index} onClick={() => onGetTime({ ...time, hour: index })}>
               {index < 10 ? `0${index}` : index}
             </span>
           ))}
@@ -38,7 +40,7 @@ const TimePicker = (props: Props) => {
           {Array.from(new Array(60)).map((item, index) => (
             <span
               key={index}
-              onClick={() => setTime({ ...time, minute: index })}
+              onClick={() => onGetTime({ ...time, minute: index })}
               className={index === time.minute ? "active" : ""}
             >
               {index < 10 ? `0${index}` : index}
@@ -49,7 +51,7 @@ const TimePicker = (props: Props) => {
           {Array.from(new Array(60)).map((item, index) => (
             <span
               key={index}
-              onClick={() => setTime({ ...time, second: index })}
+              onClick={() => onGetTime({ ...time, second: index })}
               className={index === time.second ? "active" : ""}
             >
               {index < 10 ? `0${index}` : index}

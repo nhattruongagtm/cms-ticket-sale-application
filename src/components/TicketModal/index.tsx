@@ -1,23 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { TicketPackage } from "../../models/Ticket";
+import { editTicket } from "../../slice/EditSlice";
 import { hiddenModal, ModalStatus } from "../../slice/ModalSlice";
 import { AppDispatch, RootState } from "../../store";
+import { DateTime } from "../Calendar";
 import Checkbox from "../Checkbox";
 import DatePicker from "../DatePicker";
-import TimePicker from "../TimePicker";
+import TimePicker, { Time } from "../TimePicker";
 
 type Props = {};
 
 type InputForm = Required<TicketPackage>;
+
+interface PackageTypes {
+  check: number[];
+}
 
 const TicketModal = (props: Props) => {
   const modalState = useSelector((state: RootState) => state.modal.modalState);
   const editData = useSelector((state: RootState) => state.edit.edit);
 
   const dispatch: AppDispatch = useDispatch();
-
-  const [packageType, setPackageType] = useState<number[]>([]);
 
   const initialForm: InputForm = {
     id: "",
@@ -31,16 +35,28 @@ const TicketModal = (props: Props) => {
     simplePrice: 0,
     status: 0,
   };
-  const [inputForm, setInputForm] = useState<InputForm>(initialForm);
+  const [inputForm, setInputForm] = useState<InputForm & PackageTypes>({
+    ...initialForm,
+    check: [],
+  });
 
   const handleCheckType = (type: number) => {
-    if (packageType.length === 0) {
-      setPackageType([...packageType, type]);
+    if (inputForm.check.length === 0) {
+      setInputForm({
+        ...inputForm,
+        check: [...inputForm.check, type],
+      });
     } else {
-      if (packageType.includes(type)) {
-        setPackageType([...packageType.filter((item) => item !== type)]);
+      if (inputForm.check.includes(type)) {
+        setInputForm({
+          ...inputForm,
+          check: [...inputForm.check.filter((item) => item !== type)],
+        });
       } else {
-        setPackageType([...packageType, type]);
+        setInputForm({
+          ...inputForm,
+          check: [...inputForm.check, type],
+        });
       }
     }
   };
@@ -49,9 +65,45 @@ const TicketModal = (props: Props) => {
     e.preventDefault();
   };
 
-  useEffect(()=>{
-    setInputForm({...inputForm,...editData})
-  },[editData])
+  useEffect(() => {
+    const simplePrice = editData.simplePrice > 0 ? 1 : -1;
+    const comboPrice = editData.quantityForCombo > 0 ? 2 : -1;
+    setInputForm({
+      ...inputForm,
+      ...editData,
+      check: [simplePrice, comboPrice],
+    });
+  }, [editData]);
+
+  const handleGetUsingDate = (date: DateTime) => {
+    setInputForm({
+      ...inputForm,
+      appliedDate: date,
+    });
+  };
+  const handleGetExpireDate = (date: DateTime) => {
+    setInputForm({
+      ...inputForm,
+      expireDate: date,
+    });
+  };
+
+  const handleGetAppliedTime = (time: Time) => {
+    dispatch(
+      editTicket({
+        ...inputForm,
+        appliedTime: time,
+      })
+    );
+  };
+  const handleGetExpireTime = (time: Time) => {
+    dispatch(
+      editTicket({
+        ...inputForm,
+        expireTime: time,
+      })
+    );
+  };
 
   return (
     <form
@@ -105,10 +157,17 @@ const TicketModal = (props: Props) => {
           <p className="sub__title">Ngày áp dụng</p>
           <div className="modal__date__main">
             <div className="modal__date">
-              <DatePicker />
+              <DatePicker
+                onGetDate={handleGetUsingDate}
+                type={1}
+                date={inputForm.appliedDate}
+              />
             </div>
             <div className="modal__date">
-              <TimePicker />
+              <TimePicker
+                time={editData.appliedTime}
+                onGetTime={handleGetAppliedTime}
+              />
             </div>
           </div>
         </div>
@@ -116,10 +175,17 @@ const TicketModal = (props: Props) => {
           <p className="sub__title">Ngày hết hạn</p>
           <div className="modal__date__main">
             <div className="modal__date">
-              <DatePicker />
+              <DatePicker
+                onGetDate={handleGetExpireDate}
+                type={1}
+                date={inputForm.expireDate}
+              />
             </div>
             <div className="modal__date">
-              <TimePicker />
+              <TimePicker
+                time={editData.expireTime}
+                onGetTime={handleGetExpireTime}
+              />
             </div>
           </div>
         </div>
@@ -131,7 +197,7 @@ const TicketModal = (props: Props) => {
             <div className="price__input__line">
               <Checkbox
                 id="simple__price"
-                isChecked={packageType.includes(1) ? true : false}
+                isChecked={inputForm.check.includes(1) ? true : false}
                 value={"1"}
                 text="Vé lẻ (vnđ/vé) với giá"
                 onChecked={() => handleCheckType(1)}
@@ -147,6 +213,7 @@ const TicketModal = (props: Props) => {
                     simplePrice: Number(e.target.value),
                   })
                 }
+                disabled={!inputForm.check.includes(1)}
               />{" "}
               <span>/ vé</span>
             </div>
@@ -157,7 +224,11 @@ const TicketModal = (props: Props) => {
             <div className="price__input__line">
               <Checkbox
                 id="combo__price"
-                isChecked={packageType.includes(2) ? true : false}
+                isChecked={
+                  inputForm.check.includes(2) && inputForm.comboPrice > 0
+                    ? true
+                    : false
+                }
                 value="1"
                 text="Compo vé với giá"
                 onChecked={() => handleCheckType(2)}
@@ -173,11 +244,12 @@ const TicketModal = (props: Props) => {
                     comboPrice: Number(e.target.value),
                   })
                 }
+                disabled={!inputForm.check.includes(2)}
               />{" "}
               <span>/</span>
               <input
                 type="number"
-                placeholder="Giá vé"
+                placeholder="Số"
                 className="ticket__price--short"
                 value={
                   inputForm.quantityForCombo > 0
@@ -190,6 +262,7 @@ const TicketModal = (props: Props) => {
                     quantityForCombo: Number(e.target.value),
                   })
                 }
+                disabled={!inputForm.check.includes(2)}
               />{" "}
               <span> vé</span>
             </div>
@@ -202,12 +275,8 @@ const TicketModal = (props: Props) => {
               setInputForm({ ...inputForm, status: Number(e.target.value) })
             }
           >
-            <option value={0} >
-              Đang áp dụng
-            </option>
-            <option value={1}>
-              Tắt
-            </option>
+            <option value={0}>Đang áp dụng</option>
+            <option value={1}>Tắt</option>
           </select>
         </div>
         <p className="ticket__modal__note">

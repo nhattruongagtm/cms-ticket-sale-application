@@ -26,8 +26,9 @@
       }
     }
     &__time {
-      width: calc(129px - 24px);
-      height: 20px;
+      // width: calc(129px - 24px);
+      width: calc(129px);
+      // height: 20px;
       padding: 10px 12px;
       border-radius: 8px;
       select {

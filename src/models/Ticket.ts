@@ -12,12 +12,14 @@ interface Date {
   
 export interface TicketListData {
     bookingCode: string;
+    ticketNumber: number;
     name: string;
     status: number;
-    ticketNumber: number;
     usingDate: Date;
     exportDate: Date;
     checkInPort: number;
+    checkStatus: number
+    typeName: string;
   }
   export interface CheckingTicketData {
     ticketNumber: string;
@@ -45,9 +47,9 @@ export interface TicketListData {
     expireDate: DateTime;
     expireTime: Time;
     status: number;
-    simplePrice?: number;
-    comboPrice?: number;
-    quantityForCombo?: number;
+    simplePrice: number;
+    comboPrice: number;
+    quantityForCombo: number;
   }
   
   

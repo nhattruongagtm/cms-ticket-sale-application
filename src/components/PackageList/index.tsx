@@ -1,60 +1,140 @@
-import React from "react";
+import { Table } from "antd";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { resetTicket } from "../../slice/EditSlice";
-import { displayAddModal } from "../../slice/ModalSlice";
+import { getAllPackages } from "../../api/crudData";
+import { TicketPackage } from "../../models/Ticket";
+import { editTicket, resetTicket } from "../../slice/EditSlice";
+import { displayAddModal, displayUpdateModal } from "../../slice/ModalSlice";
 import { AppDispatch } from "../../store";
+import { formatDate, formatTime } from "../../utils/dateTime";
+import { DateTime } from "../Calendar";
 import Pagination from "../Pagination";
 import TableList, { DataTable } from "../TableList";
+import { Time } from "../TimePicker";
 
 type Props = {};
 
 const PackageList = (props: Props) => {
   const dispatch: AppDispatch = useDispatch();
 
-  const dataList: DataTable = {
-    label: [
-      "Mã gói",
-      "Tên gói",
-      "Ngày áp dụng",
-      "Ngày hết hạn",
-      "Giá vé (VNĐ/Vé)",
-      "Giá Combo (VNĐ/Combo)",
-      "Tình trạng",
-    ],
-    data: [
-      {
-        id: "ALT20210501",
-        appliedDate: { day: 5, month: 3, year: 2022 },
-        expireDate: { day: 6, month: 5, year: 2022 },
-        appliedTime: { hour: 19, minute: 30, second: 0 },
-        expireTime: { hour: 20, minute: 0, second: 0 },
-        name: "Gói gia đình",
-       
-          comboPrice: 150000,
-          quantityForCombo: 3,
-          simplePrice: 170000,
-       
-        status: 1,
-      },
-      {
-        id: "ALT20210502",
-        appliedDate: { day: 14, month: 5, year: 2022 },
-        expireDate: { day: 14, month: 6, year: 2022 },
-        appliedTime: { hour: 7, minute: 0, second: 0 },
-        expireTime: { hour: 15, minute: 0, second: 0 },
-        name: "Gói gia đình",
-          comboPrice: 150000,
-          quantityForCombo: 1,
-          simplePrice: 0,
-        status: 0,
-      },
-    ],
+  const [ticketList, setTicketList] = useState<TicketPackage[]>([]);
+
+  const handleDisplayUpdateModal = (newData : TicketPackage) => {
+    console.log(newData)
+    dispatch(editTicket(newData));
+    dispatch(displayUpdateModal());
+
+  };
+  const columns = [
+    {
+      title: "STT",
+      dataIndex: "stt",
+      key: "stt",
+      render: (text: string, record: TicketPackage) =>
+        ticketList.indexOf(record) + 1,
+    },
+    {
+      title: "Mã gói",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Tên gói",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Ngày áp dụng",
+      dataIndex: "appliedDate",
+      key: "appliedDate",
+      render: (date: DateTime, item: TicketPackage) => (
+        <div className="tb__datetime">
+          <p>
+            <span>{formatDate(date)}</span>
+            <span>{formatTime(item.appliedTime)}</span>
+          </p>
+        </div>
+      ),
+    },
+    {
+      title: "Ngày hết hạn",
+      dataIndex: "expireDate",
+      key: "expireDate",
+      render: (date: DateTime, item: TicketPackage) => (
+        <div className="tb__datetime">
+          <p>
+            <span>{formatDate(date)}</span>
+            <span>{formatTime(item.appliedTime)}</span>
+          </p>
+        </div>
+      ),
+    },
+    {
+      title: "Giá vé (VNĐ/Vé)",
+      dataIndex: "simplePrice",
+      key: "simplePrice",
+      render: (price: number) => <>{price > 0 ? <>{price} VNĐ</> : <></>}</>,
+    },
+    {
+      title: "Giá Combo (VNĐ/Combo)",
+      dataIndex: "comboPrice",
+      key: "comboPrice",
+      render: (price: number, item: TicketPackage) => (
+        <>
+          {price > 0 ? (
+            <>
+              {price} VNĐ/{item.quantityForCombo} vé
+            </>
+          ) : (
+            <></>
+          )}
+        </>
+      ),
+    },
+    {
+      title: "Tình trạng",
+      dataIndex: "status",
+      key: "status",
+      render: (status: number) => (
+        <p
+          className={`tb__status ${
+            status === 0 ? "tb__status--unused" : "tb__status--expire"
+          }`}
+        >
+          <span></span>
+          {status === 0 ? "Đang áp dụng" : "Tắt"}
+        </p>
+      ),
+    },
+    {
+      title: "",
+      dataIndex: "update",
+      key: "update",
+      render: (status: number, item: TicketPackage) => (
+        <div className="tb__edit" onClick={()=>handleDisplayUpdateModal(item)}>
+          <p>
+            <i className="bx bx-edit"></i>
+            Cập nhật   
+          </p>
+        </div>
+      ),
+    },
+  ];
+
+  const handleDisplayAddModal = () => {
+    dispatch(resetTicket());
+    dispatch(displayAddModal());  
   };
 
-  const handleDisplayAddModal = () =>{
-    dispatch(resetTicket())
-    dispatch(displayAddModal())
-  }
+  useEffect(() => {
+    getAllPackages()
+      .then((res) => {
+        setTicketList(res);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
 
   return (
     <div className="content__main">
@@ -75,8 +155,15 @@ const PackageList = (props: Props) => {
             </button>
           </div>
         </div>
-        <TableList dataTable={dataList} type={2} />
-        <Pagination />
+        <Table
+          columns={columns}
+          dataSource={ticketList}
+          pagination={{
+            defaultPageSize: 5,
+            showSizeChanger: false,
+            pageSizeOptions: ["10", "20", "30"],
+          }}
+        />
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { filter } from "../../slice/Filter/filterSlice";
 import { hiddenModal, ModalStatus } from "../../slice/ModalSlice";
 import { RootState } from "../../store";
 import Calendar, { DateTime } from "../Calendar";
@@ -9,17 +10,29 @@ import Radio from "../Radio";
 
 type Props = {};
 
-type CheckItem = "c__c1" | "c__c2" | "c__c3" | "c__c4" | "c__c5";
+export type CheckItem = "1" | "2" | "3" | "4" | "5";
 
-type CheckAll = "c__all";
+export type CheckAll = "0";
 
 type CheckType = CheckAll | CheckItem[];
+
+export interface FilterInput {
+  dateFrom: DateTime;
+  dateTo: DateTime;
+  status: number;
+  checkInPorts: CheckType;
+}
 
 const Filter = (props: Props) => {
   const dispatch = useDispatch();
   const modalState = useSelector((state: RootState) => state.modal.modalState);
-  const [checkList, setCheckList] = useState<CheckType>("c__all");
-  const [radioValue, setRadioValue] = useState<string>("all");
+  const [radioValue, setRadioValue] = useState<number>(-1);
+  const [filterForm, setFilterForm] = useState<FilterInput>({
+    status: -1,
+    checkInPorts: "0",
+    dateFrom: {day: 0, month: 0, year: 0},
+    dateTo: {day: 0, month: 0, year: 0},
+  });
 
   const [dateFrom, setDateFrom] = useState<DateTime>({
     day: new Date().getDate(),
@@ -28,42 +41,85 @@ const Filter = (props: Props) => {
   });
 
   const handleFilter = () => {
-    console.log(checkList);
-    dispatch(hiddenModal());
+    console.log(filterForm);
+    dispatch(filter({
+      ...filterForm
+    }))
+    dispatch(hiddenModal())
   };
 
   const handleGetChecked = (value: string) => {
-    if (value === "c__all") {
-      if (checkList === "c__all") {
-        setCheckList([]);
+    if (value === "0") {
+      if (filterForm.checkInPorts === "0") {
+        setFilterForm({
+          ...filterForm,
+          checkInPorts: [],
+        });
+      
       } else {
-        setCheckList(value);
+        setFilterForm({
+          ...filterForm,
+          checkInPorts: value,
+        });
+    
       }
     } else {
-      let newCheckList = [...(checkList as CheckItem[])];
-      const isChecked = checkList.includes(value as CheckItem);
+      let newCheckList = [...(filterForm.checkInPorts as CheckItem[])];
+      const isChecked = filterForm.checkInPorts.includes(value as CheckItem);
 
-      if (checkList === "c__all") {
+      if (filterForm.checkInPorts === "0") {
         newCheckList = [];
       }
       if (newCheckList.length === 4) {
-        setCheckList("c__all");
+        setFilterForm({
+          ...filterForm,
+          checkInPorts: "0",
+        });
+     
       } else {
         if (isChecked) {
-          setCheckList([...newCheckList.filter((item) => item !== value)]);
+          setFilterForm({
+            ...filterForm,
+            checkInPorts: [...newCheckList.filter((item) => item !== value)],
+          });
+       
         } else {
-          setCheckList([...(newCheckList as CheckItem[]), value as CheckItem]);
+          setFilterForm({
+            ...filterForm,
+            checkInPorts: [
+              ...(newCheckList as CheckItem[]),
+              value as CheckItem,
+            ],
+          });
+          
         }
       }
     }
   };
 
-  const handleGetRadioValue = (value: string) => {
+  const handleGetRadioValue = (value: number) => {
+    
     setRadioValue(value);
+    setFilterForm({
+      ...filterForm,
+      status: value,
+    });
   };
 
+  const handleGetDateFrom = (date: DateTime) => {
+    setFilterForm({
+      ...filterForm,
+      dateFrom: date,
+    });
+    
+
+  };
   const handleGetDateTo = (date: DateTime) => {
-    setDateFrom(date);
+   
+    setFilterForm({
+      ...filterForm,
+      dateTo: date,
+    });
   };
   return (
     <div
@@ -77,11 +133,11 @@ const Filter = (props: Props) => {
       <div className="filter__date">
         <div className="filter__from">
           <p className="filter__sub__title">Từ ngày</p>
-          <DatePicker />
+          <DatePicker onGetDate={handleGetDateFrom} type={1} date={filterForm.dateFrom}/>
         </div>
         <div className="filter__from">
           <p className="filter__sub__title">Đến ngày</p>
-          <DatePicker/>
+          <DatePicker onGetDate={handleGetDateTo} type={1} date={filterForm.dateTo}/>
         </div>
       </div>
       <div className="filter__status">
@@ -90,32 +146,32 @@ const Filter = (props: Props) => {
           <Radio
             id="all"
             name="filter__status"
-            value={"all"}
-            isChecked={radioValue === "all" ? true : false}
+            value={-1}
+            isChecked={radioValue === -1 ? true : false}
             onChecked={handleGetRadioValue}
             text="Tất cả"
           />
           <Radio
             id="used"
             name="filter__status"
-            value={"used"}
-            isChecked={radioValue === "used" ? true : false}
+            value={0}
+            isChecked={radioValue === 0 ? true : false}
             onChecked={handleGetRadioValue}
             text="Đã sử dụng"
           />
           <Radio
             id="unused"
             name="filter__status"
-            value={"unused"}
-            isChecked={radioValue === "unused" ? true : false}
+            value={1}
+            isChecked={radioValue === 1 ? true : false}
             onChecked={handleGetRadioValue}
             text="Chưa sử dụng"
           />
           <Radio
             id="expire"
             name="filter__status"
-            value={"expire"}
-            isChecked={radioValue === "expire" ? true : false}
+            value={2}
+            isChecked={radioValue === 2 ? true : false}
             onChecked={handleGetRadioValue}
             text="Hết hạn"
           />
@@ -125,45 +181,45 @@ const Filter = (props: Props) => {
         <p className="filter__sub__title">Cổng Check - in</p>
         <div className="filter__checking__checkboxs">
           <Checkbox
-            id="c__all"
-            isChecked={checkList === "c__all" ? true : false}
+            id="0"
+            isChecked={filterForm.checkInPorts === "0" ? true : false}
             text="Tất cả"
-            value="c__all"
+            value="0"
             onChecked={handleGetChecked}
           />
           <Checkbox
-            id="c__c1"
-            isChecked={checkList.includes("c__c1")}
+            id="1"
+            isChecked={filterForm.checkInPorts.includes("1")}
             text="Cổng 1"
-            value="c__c1"
+            value="1"
             onChecked={handleGetChecked}
           />
           <Checkbox
-            id="c__c2"
-            isChecked={checkList.includes("c__c2")}
+            id="2"
+            isChecked={filterForm.checkInPorts.includes("2")}
             text="Cổng 2"
-            value="c__c2"
+            value="2"
             onChecked={handleGetChecked}
           />
           <Checkbox
-            id="c__c3"
-            isChecked={checkList.includes("c__c3")}
+            id="3"
+            isChecked={filterForm.checkInPorts.includes("3")}
             text="Cổng 3"
-            value="c__c3"
+            value="3"
             onChecked={handleGetChecked}
           />
           <Checkbox
-            id="c__c4"
-            isChecked={checkList.includes("c__c4")}
+            id="4"
+            isChecked={filterForm.checkInPorts.includes("4")}
             text="Cổng 4"
-            value="c__c4"
+            value="4"
             onChecked={handleGetChecked}
           />
           <Checkbox
-            id="c__c5"
-            isChecked={checkList.includes("c__c5")}
+            id="5"
+            isChecked={filterForm.checkInPorts.includes("5")}
             text="Cổng 5"
-            value="c__c5"
+            value="5"
             onChecked={handleGetChecked}
           />
         </div>
