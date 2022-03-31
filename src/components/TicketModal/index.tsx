@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { TicketPackage } from "../../models/Ticket";
 import { editTicket } from "../../slice/EditSlice";
+import { requestCreatePackage, requestUpdatePackage } from "../../slice/Filter/crudSlice";
 import { hiddenModal, ModalStatus } from "../../slice/ModalSlice";
 import { AppDispatch, RootState } from "../../store";
 import { DateTime } from "../Calendar";
@@ -20,7 +21,7 @@ interface PackageTypes {
 const TicketModal = (props: Props) => {
   const modalState = useSelector((state: RootState) => state.modal.modalState);
   const editData = useSelector((state: RootState) => state.edit.edit);
-
+  const isLoading = useSelector((state: RootState)=>state.crud.isLoading)
   const dispatch: AppDispatch = useDispatch();
 
   const initialForm: InputForm = {
@@ -63,6 +64,17 @@ const TicketModal = (props: Props) => {
 
   const handleSubmitModal = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const input: Omit<InputForm & PackageTypes,"check"> = {...inputForm}
+
+    if(editData.id === ''){
+      // create package
+      dispatch(requestCreatePackage(input))
+    }
+    else{
+      // edit package
+      dispatch(requestUpdatePackage(input))
+    }
   };
 
   useEffect(() => {
@@ -104,6 +116,7 @@ const TicketModal = (props: Props) => {
       })
     );
   };
+
 
   return (
     <form
@@ -161,6 +174,7 @@ const TicketModal = (props: Props) => {
                 onGetDate={handleGetUsingDate}
                 type={1}
                 date={inputForm.appliedDate}
+                pos="bottom-right"
               />
             </div>
             <div className="modal__date">
@@ -179,6 +193,7 @@ const TicketModal = (props: Props) => {
                 onGetDate={handleGetExpireDate}
                 type={1}
                 date={inputForm.expireDate}
+                pos="bottom-left"  
               />
             </div>
             <div className="modal__date">
@@ -225,11 +240,11 @@ const TicketModal = (props: Props) => {
               <Checkbox
                 id="combo__price"
                 isChecked={
-                  inputForm.check.includes(2) && inputForm.comboPrice > 0
+                  inputForm.check.includes(2)
                     ? true
                     : false
                 }
-                value="1"
+                value="2"
                 text="Compo vé với giá"
                 onChecked={() => handleCheckType(2)}
               />
@@ -283,10 +298,10 @@ const TicketModal = (props: Props) => {
           <span>*</span> là thông tin bắt buộc
         </p>
         <div className="ticket__modal__actions">
-          <button className="button" onClick={() => dispatch(hiddenModal())}>
+          <button className="button" type="button" onClick={() => dispatch(hiddenModal())}>
             Hủy
           </button>
-          <button className="button button--fill">Lưu</button>
+          <button className="button button--fill" type="submit">Lưu</button>
         </div>
       </div>
     </form>

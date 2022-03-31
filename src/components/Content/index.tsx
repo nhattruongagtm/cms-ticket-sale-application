@@ -15,7 +15,7 @@ const Content = (props: Props) => {
         <Route path={RoutePath.HOME_PAGE} element={<Home />} />
         <Route path={RoutePath.TICKET_MANAGE_PAGE} element={<TicketList />} />
         <Route path={RoutePath.TICKET_CHECK_PAGE} element={<CheckTicket />} />
-        <Route path={RoutePath.SETTING_PAGE} element={<PackageList />} />
+        <Route path={RoutePath.PACKAGE_PAGE} element={<PackageList />} />
       </Routes>
     </>
   );

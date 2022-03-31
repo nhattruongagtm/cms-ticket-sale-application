@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { displayDatePicker } from "../slice/ModalSlice";
-import { RootState } from "../store";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import Calendar, { DateTime } from "./Calendar";
+
+export type PickerPosition = "top-left" | "top-right" | "bottom-left" | "bottom-right";
 interface Props {
   onGetDate: (date: DateTime) => void;
   type: 0 | 1;
   date: DateTime;
+  pos?: PickerPosition;
 }
 
 interface Position {
@@ -14,7 +15,7 @@ interface Position {
   y: number;
 }
 
-const DatePicker = ({ onGetDate, type, date }: Props) => {
+const DatePicker = ({ onGetDate, type, date, pos }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch = useDispatch();
   const [position, setPosition] = useState<Position>({ x: 0, y: 30 });
@@ -25,12 +26,10 @@ const DatePicker = ({ onGetDate, type, date }: Props) => {
   };
 
   const handleOpen = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-    // setPosition({
-    //   x: 0,
-    //   y: 500,
-    // });
     setIsOpen(!isOpen);
   };
+
+ 
 
   return (
     <div className="home__profit__date calendar" id="calender">
@@ -60,6 +59,7 @@ const DatePicker = ({ onGetDate, type, date }: Props) => {
         left={position.x}
         onGetDate={handleGetDate}
         isOpen={isOpen}
+        pos={pos}
       />
     </div>
   );

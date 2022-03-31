@@ -4,9 +4,12 @@
   align-items: center;
   // padding: 0 32px 0 33px;
   &__logo {
-    min-width: 133px;
+    min-width: 16%;
     max-height: 58px;
-    margin-right: 128px;
+
+    img{
+
+    }
 
   }
   &__main {

@@ -79,7 +79,7 @@ const CheckTicket = (props: Props) => {
       dataIndex: "checkStatus",
       key: "checkStatus",
       render: (status: number) => (
-        <p className={status === 1 ? "status--uncheck" : "status--checked"}>
+        <p className={status === 0 ? "status--uncheck" : "status--checked"}>
           {status === 0 ? "Đã đối soát" : "Chưa đối soát"}
         </p>
       ),
@@ -135,7 +135,7 @@ const CheckTicket = (props: Props) => {
             <img src="./imgs/search.svg" alt="" />
           </div>
           <div className="check__ticket__action">
-            <button>Chốt đối soát</button>
+            <button className="butto n ">Chốt đối soát</button>
           </div>
         </div>
         <Table
@@ -189,7 +189,7 @@ const CheckTicket = (props: Props) => {
             {/* <span>01/05/2022</span> <i className="bx bx-calendar"></i> */}
             <DatePicker
               defaultValue={moment(
-                `${new Date().getDate()}/${
+                `${new Date().getDate()-3}/${
                   new Date().getMonth() + 1
                 }/${new Date().getFullYear()}`,
                 "DD/MM/YYYY"
@@ -216,21 +216,22 @@ const CheckTicket = (props: Props) => {
           >
             <DatePicker
               defaultValue={moment(
-                `${new Date().getDate() + 1}/${
+                `${new Date().getDate()-2}/${
                   new Date().getMonth() + 1
                 }/${new Date().getFullYear()}`,
                 "DD/MM/YYYY"
               )}
+              
               format={"DD/MM/YYYY"}
               onChange={(e) =>
                 setFilterInput({
                   ...filterInput,
                   dateTo: {
-                    day: e ? e.date() : 2,
+                    day: e ? e.date() : 1,
                     month: e ? e.month() + 1 : 1,
                     year: e ? e.year() : 2023,
                   },
-                })
+                })  
               }
             />
             {/* <span>dd/mm/yy</span> <i className="bx bx-calendar"></i> */}

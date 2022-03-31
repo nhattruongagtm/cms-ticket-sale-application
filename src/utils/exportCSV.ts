@@ -43,9 +43,6 @@ export const convertToString = (exportData: ExportData) => {
         // @ts-ignore
         const value = item[key];
 
-  
-
-        
           // if (key.indexOf("ate") !== -1) {
 
             if (idx !== keys.length - 1) {

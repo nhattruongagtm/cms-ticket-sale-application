@@ -133,11 +133,11 @@ const Filter = (props: Props) => {
       <div className="filter__date">
         <div className="filter__from">
           <p className="filter__sub__title">Từ ngày</p>
-          <DatePicker onGetDate={handleGetDateFrom} type={1} date={filterForm.dateFrom}/>
+          <DatePicker onGetDate={handleGetDateFrom} type={1} date={filterForm.dateFrom} pos="bottom-right"/>
         </div>
         <div className="filter__from">
           <p className="filter__sub__title">Đến ngày</p>
-          <DatePicker onGetDate={handleGetDateTo} type={1} date={filterForm.dateTo}/>
+          <DatePicker onGetDate={handleGetDateTo} type={1} date={filterForm.dateTo} pos="bottom-left"/>
         </div>
       </div>
       <div className="filter__status">

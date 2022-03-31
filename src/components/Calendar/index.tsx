@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { hiddenDatePicker } from "../../slice/ModalSlice";
-import { RootState } from "../../store";
+import { useDispatch } from "react-redux";
+import { PickerPosition } from "../DatePicker";
 import Radio from "../Radio";
 
 interface Props {}
@@ -21,8 +20,9 @@ export interface Position {
   left: number;
   onGetDate: (date: DateTime) => void;
   isOpen: boolean;
+  pos?: PickerPosition;
 }
-const Calendar = ({ top, left, onGetDate, isOpen }: Position) => {
+const Calendar = ({ top, left, onGetDate, isOpen, pos }: Position) => {
   const [option, setOptions] = useState<DateOption>(0);
 
   const dispatch = useDispatch();
@@ -146,6 +146,46 @@ const Calendar = ({ top, left, onGetDate, isOpen }: Position) => {
     setDateTime({ ...dateTime, day: index });
   };
 
+  useEffect(() => {
+    if (pos) {
+      const datePicker = document.getElementById("date__picker");
+      if (datePicker) {
+        datePicker.style.width = "fit-content";
+        switch (pos) {
+          case "bottom-left":
+            datePicker.style.top = "40px";
+            // datePicker.style.left = "0";
+            // datePicker.style.bottom = "unset";
+            // datePicker.style.right = "unset";
+            break;
+          case "top-left":
+            datePicker.style.bottom = "calc(100% + 5px)";
+            // datePicker.style.top = "unset";
+            datePicker.style.left = "0";
+            // datePicker.style.right = "unset";
+            // datePicker.style.width = "fit-content";
+            break;
+          case "bottom-right":
+            datePicker.style.top = "40px";
+            datePicker.style.right = "0";
+            // datePicker.style.bottom = "unset";
+            // datePicker.style.left = "unset";
+            // datePicker.style.width = "fit-content";
+            break;
+          case "top-right":
+            datePicker.style.bottom = "calc(100% + 5px)";
+            // datePicker.style.left = "unset";
+            // datePicker.style.top = "unset";
+            datePicker.style.right = "0";
+            break;
+
+          default:
+            break;
+        }
+      }
+    }
+  }, []);
+
   return (
     <>
       <div
@@ -170,7 +210,7 @@ const Calendar = ({ top, left, onGetDate, isOpen }: Position) => {
         <div className="date__picker__options">
           <Radio
             id="picker__day"
-            value={"day"}
+            value={0}
             isChecked={option === 0 ? true : false}
             name="a"
             text="Theo ngày"
@@ -178,14 +218,14 @@ const Calendar = ({ top, left, onGetDate, isOpen }: Position) => {
           />
           <Radio
             id="picker__week"
-            value={"week"}
+            value={1}
             isChecked={option === 1 ? true : false}
             name="b"
             text="Theo tuần"
             onChecked={handleGetRadio}
           />
         </div>
-        <ul className="date__picker__title">
+        {/* <ul className="date__picker__title">
           <li>T2</li>
           <li>T3</li>
           <li>T4</li>
@@ -210,9 +250,9 @@ const Calendar = ({ top, left, onGetDate, isOpen }: Position) => {
               key={index}
               onClick={() => handleChooseDate(index + 1)}
               className={`${
-                (new Date().getFullYear() === dateTime.year &&
-                  new Date().getMonth() + 1 === dateTime.month &&
-                  new Date().getDate() === index + 1) 
+                new Date().getFullYear() === dateTime.year &&
+                new Date().getMonth() + 1 === dateTime.month &&
+                new Date().getDate() === index + 1
                   ? "active"
                   : ""
               }`}
@@ -229,7 +269,39 @@ const Calendar = ({ top, left, onGetDate, isOpen }: Position) => {
               {index + 1}
             </li>
           ))}
-        </ul>
+        </ul> */}
+        <table className="date__picker__table">
+          <thead>
+            <tr>
+              <td>T2</td>
+              <td>T3</td>
+              <td>T4</td>
+              <td>T5</td>
+              <td>T6</td>
+              <td>T7</td>
+              <td>CN</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {Array.from(new Array(daysOfMonth)).slice(0,7).map((number, index) => (
+                <td
+                  key={index}
+                  onClick={() => handleChooseDate(index + 1)}
+                  className={`${
+                    new Date().getFullYear() === dateTime.year &&
+                    new Date().getMonth() + 1 === dateTime.month &&
+                    new Date().getDate() === index + 1
+                      ? "active"
+                      : ""
+                  }`}
+                >
+                  {index + 1}
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
       </div>
     </>
   );

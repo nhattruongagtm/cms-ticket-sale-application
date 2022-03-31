@@ -1,6 +1,6 @@
 body {
   font-size: 18px;
-  font-family: $primary-font!important;  
+  font-family: $primary-font !important;
 }
 
 .app {
@@ -30,6 +30,13 @@ body {
   background-color: white;
   padding: 10px 55px;
   cursor: pointer;
+  transition: 0.2s;
+
+  &:hover{
+    background-color: $orange-yellow;
+    color: white;
+
+  }
 }
 button.button--fill {
   background-color: $orange;
@@ -138,7 +145,7 @@ button.button--fill {
       td {
         border-collapse: collapse;
       }
-      
+
       // status--here
       .tb__expire {
       }
@@ -151,8 +158,6 @@ button.button--fill {
       .tb__start {
         // text-align: right;
       }
-      
-      
     }
   }
 
@@ -242,19 +247,22 @@ button.button--fill {
 .tb__edit {
   cursor: pointer;
 
-  p {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  color: $orange-yellow;
+  line-height: 1;
+  gap: 5px;
+  span{
     display: flex;
     align-items: center;
-    width: fit-content;
+    height: 35px;
+  }
+  i {
+    display: inline-flex;
     color: $orange-yellow;
-    line-height: 1;
-    gap: 5px;
-    height: 20px;
-    i {
-      color: $orange-yellow;
-      font-size: 25px;
-      opacity: 1;
-    }
+    font-size: 22px;
+    opacity: 1;
   }
 }
 
@@ -494,11 +502,11 @@ button.button--fill {
     gap: 18px;
   }
 }
-.status--checked{
+.status--checked {
   // font-style: italic;
   // color: $gray;
 }
-.status--uncheck{
+.status--uncheck {
   // font-style: italic;
   color: $expire-status;
 }

@@ -1,6 +1,6 @@
 import { convertPort, convertPorts } from "../api/crudData";
 import { CheckItem, FilterInput } from "../components/Filter";
-import { TicketListData } from "../models/Ticket";
+import { TicketListData, TicketPackage } from "../models/Ticket";
 import { CheckingFilter } from "../pages/CheckTicket";
 import { compareTo } from "./dateTime";
 
@@ -25,6 +25,14 @@ export const search = (key: string, list: TicketListData[]) => {
   if (key.trim() !== "") {
     return list.filter(
       (item) => item.ticketNumber.toString().indexOf(key) !== -1
+    );
+  }
+  return list;
+};
+export const searchPackage = (key: string, list: TicketPackage[]) => {
+  if (key.trim() !== "") {
+    return list.filter(
+      (item) => item.id.toString().indexOf(key) !== -1
     );
   }
   return list;

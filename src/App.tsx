@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { getAllTickets, getChartData } from "./api/crudData";
+import { getAllTickets, getChartData, revenue, revenueByDate } from "./api/crudData";
 import { generateTicket, generateTicketPackages } from "./api/generateData";
 import Content from "./components/Content";
 import DatePicker from "./components/DatePicker";
@@ -14,6 +14,7 @@ import "./scss/app.scss";
 import { ModalStatus } from "./slice/ModalSlice";
 import { RootState } from "./store";
 import { filter } from "./utils/filter";
+import Loading from "./components/Loading";
 
 function App() {
   const modalState = useSelector((state: RootState) => state.modal.modalState);
@@ -32,6 +33,8 @@ function App() {
     //   });
     // generateTicket()
     // generateTicketPackages()
+
+    
    
   }, []);
 
@@ -58,6 +61,7 @@ function App() {
       <Filter />
       <TicketModal />
       {/* <ChangeDateModal/> */}
+      <Loading/>
     </div>
   );
 }

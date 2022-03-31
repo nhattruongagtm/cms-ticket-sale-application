@@ -32,12 +32,6 @@ const modelSlice = createSlice({
     hiddenModal: (state) => {
       state.modalState = ModalStatus.HIDDEN_MODAL;
     },
-    displayDatePicker: (state) => {
-      state.datePicker = true;
-    },
-    hiddenDatePicker: (state) => {
-      state.datePicker = false;
-    },
     displayChangeDateModal: (state) => {
       state.modalState = ModalStatus.CHANGE_DATE_MODAL;
     },
@@ -49,8 +43,6 @@ export const {
   displayFilterModal,
   displayUpdateModal,
   hiddenModal,
-  displayDatePicker,
-  hiddenDatePicker,
   displayChangeDateModal
 } = modelSlice.actions;
 

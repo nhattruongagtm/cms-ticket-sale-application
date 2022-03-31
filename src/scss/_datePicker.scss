@@ -1,9 +1,9 @@
 .date__picker {
   position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%) scaleY(0.5);
-  // width: calc(370px - 64px);
+  // left: 0;
+  // bottom: calc(100% + 5px);
+  transform: scaleY(0.5);
+  min-width: calc(370px - 64px);
   min-height: calc(396px - 48px);
   border-radius: 20px;
   background-color: white;
@@ -13,15 +13,12 @@
   transition: 0.2s;
   opacity: 0;
   visibility: hidden;
-  
-  &--display{
-    transform: translate(-50%, 0%) scaleY(1);
+
+  &--display {
+    transform: scaleY(1);
     opacity: 1;
     visibility: visible;
-    
   }
-
-
 
   &__header {
     display: flex;
@@ -77,11 +74,16 @@
       align-items: center;
       justify-content: center;
       transition: 0.1s;
-      &.active,&:hover {
+      &.active,
+      &:hover {
         color: white;
         background-color: $date-active;
       }
-
     }
   }
+
+  &__table{
+    width: 100%;
+  }
+
 }

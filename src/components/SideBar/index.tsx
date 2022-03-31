@@ -1,13 +1,16 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink} from "react-router-dom";
 import { RoutePath } from "../../constants/routes";
 import { IRoute } from "../../routes/routes";
-import { useLocation } from "react-router";
+import { useLocation,useNavigate } from "react-router";
+import {useEffect} from 'react';
 type Props = {};
 
 const SideBar = (props: Props) => {
   const location = useLocation().pathname;
+  const navigate = useNavigate();
+
   const routeList: IRoute[] = [
     {
       path: RoutePath.HOME_PAGE,
@@ -25,11 +28,16 @@ const SideBar = (props: Props) => {
       title: "Đối soát vé",
     },
     {
-      path: RoutePath.SETTING_PAGE,
+      path: RoutePath.PACKAGE_PAGE,
       icon: "bx bx-home-alt",
       title: "Cài đặt",
     },
   ];
+
+  useEffect(() => {
+    
+  }, [location])
+
   return (
     <div className="sidebar">
       <ul className="navigation">
@@ -39,9 +47,10 @@ const SideBar = (props: Props) => {
             <span>{route.title}</span>
           </NavLink>
         ))}
-        {location === RoutePath.SETTING_PAGE && (
-          <li>Gói dịch vụ</li>
-        )}
+
+        <li className={location === RoutePath.PACKAGE_PAGE ? "active" : ""} onClick={()=>navigate(RoutePath.PACKAGE_PAGE)}>
+          Gói dịch vụ
+        </li>
       </ul>
       <div className="sidebar__copyright">
         <p>

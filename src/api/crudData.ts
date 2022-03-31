@@ -6,15 +6,19 @@ import {
   orderBy,
   query,
   startAt,
+  doc,
+  updateDoc,
+  setDoc,
   where,
 } from "firebase/firestore";
 import { FilterInput } from "../components/Filter";
 import { TicketListData, TicketPackage } from "../models/Ticket";
 import { db } from "./fbConfig";
 import { RefType } from "./generateData";
-import {CollectionReference, DocumentData} from 'firebase/firestore'
+import { CollectionReference, DocumentData } from "firebase/firestore";
+import { LineChart } from "../pages/Home/LineChart";
 
-interface TicketStatus{
+interface TicketStatus {
   used: number;
   unused: number;
 }
@@ -53,6 +57,9 @@ export const getAllPackages = (): Promise<TicketPackage[]> => {
       ticketRef.forEach((doc) => {
         if (doc.exists()) {
           const data = doc.data() as TicketPackage;
+
+          data.id = doc.id;
+
           result = [...result, data];
 
           if (result.length === ticketRef.size) {
@@ -128,15 +135,21 @@ export const filter = (
     }
   });
 };
-const getChartDataHelper = (typeName: string, ref: CollectionReference<DocumentData>,month: number, year: number,status: number) =>{
+const getChartDataHelper = (
+  typeName: string,
+  ref: CollectionReference<DocumentData>,
+  month: number,
+  year: number,
+  status: number
+) => {
   return query(
     ref,
     where("name", "==", typeName),
     where("appliedDate.month", "==", month),
     where("appliedDate.year", "==", year),
-    where("status", "==", status),
+    where("status", "==", status)
   );
-}
+};
 export const getChartData = (
   month: number,
   year: number
@@ -144,11 +157,35 @@ export const getChartData = (
   return new Promise(async (resolve, reject) => {
     const packageRef = collection(db, RefType.PACKAGES_DOCS);
 
-    const qUsedFamily = getChartDataHelper("Gói gia đình",packageRef,month,year,0)
-    const qUnusedFamily = getChartDataHelper("Gói gia đình",packageRef,month,year,1)
-    const qUsedEvent = getChartDataHelper("Gói sự kiện",packageRef,month,year,0)
-    const qUnusedEvent =getChartDataHelper("Gói sự kiện",packageRef,month,year,1)
-    
+    const qUsedFamily = getChartDataHelper(
+      "Gói gia đình",
+      packageRef,
+      month,
+      year,
+      0
+    );
+    const qUnusedFamily = getChartDataHelper(
+      "Gói gia đình",
+      packageRef,
+      month,
+      year,
+      1
+    );
+    const qUsedEvent = getChartDataHelper(
+      "Gói sự kiện",
+      packageRef,
+      month,
+      year,
+      0
+    );
+    const qUnusedEvent = getChartDataHelper(
+      "Gói sự kiện",
+      packageRef,
+      month,
+      year,
+      1
+    );
+
     try {
       const familyUsedRef = await getDocs(qUsedFamily);
       const familyUnusedRef = await getDocs(qUnusedFamily);
@@ -156,20 +193,118 @@ export const getChartData = (
       const eventUnusedRef = await getDocs(qUnusedEvent);
 
       resolve({
-        familyPackages:{
+        familyPackages: {
           used: familyUsedRef.size,
           unused: familyUnusedRef.size,
         },
-        eventPackages:{
+        eventPackages: {
           used: eventUsedRef.size,
           unused: eventUnusedRef.size,
         },
-        
-      })
-
+      });
     } catch (error) {
       console.log(error);
       reject(error);
     }
+  });
+};
+
+export const updatePackage = (ticket: TicketPackage): Promise<boolean> => {
+  return new Promise(async (resolve, reject) => {
+    const packageRef = doc(db, RefType.PACKAGES_DOCS, ticket.id);
+    console.log(ticket.id);
+    try {
+      await updateDoc(packageRef, { ...ticket });
+      resolve(true);
+    } catch (error) {
+      reject(false);
+    }
+  });
+};
+export const createPackage = (
+  ticket: TicketPackage
+): Promise<TicketPackage | boolean> => {
+  return new Promise(async (resolve, reject) => {
+    let id = "ALTA";
+    for (let i = 0; i < 5; i++) {
+      id += Math.floor(Math.random() * 10);
+    }
+    const packageRef = doc(db, RefType.PACKAGES_DOCS, id);
+
+    try {
+      await setDoc(packageRef, { ...ticket, id });
+      resolve({
+        ...ticket,
+        id: id,
+      });
+    } catch (error) {
+      reject(false);
+    }
+  });
+};
+export const revenueByDate = (
+  day: number,
+  month: number,
+  year: number
+): Promise<LineChart> => {
+  return new Promise(async (resolve, reject) => {
+    const packageRef = collection(db, RefType.PACKAGES_DOCS);
+    let revenue = 0;
+
+    const q = query(
+      packageRef,
+      where("appliedDate.day", "==", day),
+      where("appliedDate.month", "==", month),
+      where("appliedDate.year", "==", year)
+    );
+
+    try {
+      const dataRef = await getDocs(q);
+
+      let count = 0;
+      dataRef.forEach((doc) => {
+        count++;
+        if (doc.exists()) {
+          const data = doc.data() as TicketPackage;
+          revenue += data.simplePrice + data.comboPrice;
+        }
+        if (count === dataRef.size) {
+          resolve({
+            day: `${day}/${month}/${year}`,
+            revenue,
+          });
+        }
+      });
+      if (dataRef.size === 0) {
+        resolve({
+          day: `${day}/${month}/${year}`,
+          revenue: 0,
+        });
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+export const revenue = (
+  month: number,
+  year: number,
+  week?: number[]
+): Promise<LineChart[]> => {
+  return new Promise(async (resolve, reject) => {
+    let result: LineChart[] = [];
+    week?.forEach((item) => {
+      revenueByDate(item, month, year)
+        .then((res) => {
+          result.push(res);
+
+          if (week.length === result.length) {
+            resolve(result);
+          }
+        })
+        .catch((e) => {
+          reject(e);
+        });
+    });
   });
 };

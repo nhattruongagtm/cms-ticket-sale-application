@@ -1,16 +1,18 @@
 import { Table } from "antd";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getAllPackages } from "../../api/crudData";
 import { TicketPackage } from "../../models/Ticket";
 import { editTicket, resetTicket } from "../../slice/EditSlice";
+import {
+  updatePackageList,
+  updatePackageListOrigin,
+} from "../../slice/Filter/crudSlice";
 import { displayAddModal, displayUpdateModal } from "../../slice/ModalSlice";
-import { AppDispatch } from "../../store";
+import { AppDispatch, RootState } from "../../store";
 import { formatDate, formatTime } from "../../utils/dateTime";
+import { searchPackage } from "../../utils/filter";
 import { DateTime } from "../Calendar";
-import Pagination from "../Pagination";
-import TableList, { DataTable } from "../TableList";
-import { Time } from "../TimePicker";
 
 type Props = {};
 
@@ -18,12 +20,14 @@ const PackageList = (props: Props) => {
   const dispatch: AppDispatch = useDispatch();
 
   const [ticketList, setTicketList] = useState<TicketPackage[]>([]);
+  const [keySearch, setKeySearch] = useState<string>("");
+  const ticketListState = useSelector(
+    (state: RootState) => state.crud.packageList
+  );
 
-  const handleDisplayUpdateModal = (newData : TicketPackage) => {
-    console.log(newData)
+  const handleDisplayUpdateModal = (newData: TicketPackage) => {
     dispatch(editTicket(newData));
     dispatch(displayUpdateModal());
-
   };
   const columns = [
     {
@@ -111,30 +115,34 @@ const PackageList = (props: Props) => {
       dataIndex: "update",
       key: "update",
       render: (status: number, item: TicketPackage) => (
-        <div className="tb__edit" onClick={()=>handleDisplayUpdateModal(item)}>
-          <p>
-            <i className="bx bx-edit"></i>
-            Cập nhật   
-          </p>
-        </div>
+        <p className="tb__edit" onClick={() => handleDisplayUpdateModal(item)}>
+          <i className="bx bx-edit"></i>
+          <span>Cập nhật </span>
+        </p>
       ),
     },
   ];
 
   const handleDisplayAddModal = () => {
     dispatch(resetTicket());
-    dispatch(displayAddModal());  
+    dispatch(displayAddModal());
   };
 
   useEffect(() => {
     getAllPackages()
       .then((res) => {
-        setTicketList(res);
+
+        dispatch(updatePackageList(res));
+        setTicketList(searchPackage(keySearch, ticketListState));
       })
       .catch((e) => {
         console.log(e);
       });
-  }, []);
+  }, [keySearch]);
+
+  useEffect(() => {
+    setTicketList(searchPackage(keySearch, ticketListState));
+  }, [ticketListState]);
 
   return (
     <div className="content__main">
@@ -142,15 +150,17 @@ const PackageList = (props: Props) => {
         <p className="ticket__list__title title">Danh sách gói vé</p>
         <div className="ticket__features">
           <div className="header__search ticket__list__search">
-            <input type="text" placeholder="Tìm bằng số vé" />
-            <img src="./imgs/search.svg" alt="" />
+            <input
+              type="text"
+              placeholder="Tìm bằng mã gói"
+              value={keySearch}
+              onChange={(e) => setKeySearch(e.target.value)}
+            />
+            <img src=".././imgs/search.svg" alt="" />
           </div>
           <div className="ticket__list__action">
-            <button>Xuất file (.csv)</button>
-            <button
-              className="button button--fill"
-              onClick={handleDisplayAddModal}
-            >
+            <button className="button">Xuất file (.csv)</button>
+            <button className="button" onClick={handleDisplayAddModal}>
               Thêm gói vé
             </button>
           </div>

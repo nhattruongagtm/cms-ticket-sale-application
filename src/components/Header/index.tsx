@@ -5,7 +5,9 @@ type Props = {};
 const Header = (props: Props) => {
   return (
     <div className="header">
+      <div className="header__logo">
       <img src="./imgs/logo.svg" alt="" className="header__logo" />
+      </div>
       <div className="header__main">
         <div className="header__search">
           <input type="text" placeholder="Search" />

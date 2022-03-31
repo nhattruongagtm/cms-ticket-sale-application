@@ -1,10 +1,9 @@
-import { takeEvery } from "redux-saga/effects";
-function* hello() {
-  console.log("hello world!");
-}
+import { all } from "redux-saga/effects";
+import updatePackageSaga from "./updatePackageSaga";
+import addPackageSaga from "./addPackageSaga";
 
 function* rootSaga() {
-  yield takeEvery("*", hello);
+  yield all([addPackageSaga(),updatePackageSaga()]);
 }
 
 export default rootSaga;

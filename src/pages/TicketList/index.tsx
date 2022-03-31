@@ -146,10 +146,10 @@ const TicketList = (props: Props) => {
               <img src="./imgs/search.svg" alt="" />
             </div>
             <div className="ticket__list__action">
-              <button onClick={() => dispatch(displayFilterModal())}>
+              <button onClick={() => dispatch(displayFilterModal())} className="button">
                 <i className="bx bx-filter-alt"></i>Lọc
               </button>
-              <button onClick={handleDownloadCSVFile}>
+              <button onClick={handleDownloadCSVFile} className="button">
                 <a href="" id="export-csv" download={""}>
                   Xuất file (.csv)
                 </a>
