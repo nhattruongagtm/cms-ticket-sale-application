@@ -9,7 +9,7 @@
       margin-bottom: 27px;
     }
     &__date {
-      width: 153px;
+      min-width: 153px;
       height: 38px;
       border: 1px solid #e5e0e0;
       display: flex;
@@ -88,6 +88,30 @@
         // background-color: blue;
         position: relative;
         // background-color: cyan;
+
+        .chart__pie__tooltip {
+          padding: 12px;
+          position: absolute;
+          background-color: white;
+          box-shadow: 0px 0px 50px rgba(50, 50, 71, 0.25);
+          border-radius: 12px;
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 22px;
+        }
+
+        .chart__pie__used {
+          position: absolute;
+          left: -5px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+        .chart__pie__unused {
+          position: absolute;
+          right: -5px;
+          top: 40%;
+          transform: translateY(-50%);
+        }
       }
       .home__chart__note {
         display: flex;

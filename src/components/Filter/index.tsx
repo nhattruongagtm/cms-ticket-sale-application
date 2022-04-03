@@ -17,8 +17,8 @@ export type CheckAll = "0";
 type CheckType = CheckAll | CheckItem[];
 
 export interface FilterInput {
-  dateFrom: DateTime;
-  dateTo: DateTime;
+  dateFrom?: DateTime;
+  dateTo?: DateTime;
   status: number;
   checkInPorts: CheckType;
 }
@@ -34,14 +34,7 @@ const Filter = (props: Props) => {
     dateTo: {day: 0, month: 0, year: 0},
   });
 
-  const [dateFrom, setDateFrom] = useState<DateTime>({
-    day: new Date().getDate(),
-    month: new Date().getMonth() + 1,
-    year: new Date().getFullYear(),
-  });
-
   const handleFilter = () => {
-    console.log(filterForm);
     dispatch(filter({
       ...filterForm
     }))
@@ -133,11 +126,11 @@ const Filter = (props: Props) => {
       <div className="filter__date">
         <div className="filter__from">
           <p className="filter__sub__title">Từ ngày</p>
-          <DatePicker onGetDate={handleGetDateFrom} type={1} date={filterForm.dateFrom} pos="bottom-right"/>
+          <DatePicker onGetDate={handleGetDateFrom} type={1} date={filterForm.dateFrom as DateTime} pos="bottom-right"/>
         </div>
         <div className="filter__from">
           <p className="filter__sub__title">Đến ngày</p>
-          <DatePicker onGetDate={handleGetDateTo} type={1} date={filterForm.dateTo} pos="bottom-left"/>
+          <DatePicker onGetDate={handleGetDateTo} type={1} date={filterForm.dateTo as DateTime} pos="bottom-left"/>
         </div>
       </div>
       <div className="filter__status">

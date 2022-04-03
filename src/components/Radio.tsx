@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 type Props = {
   name: string;
@@ -8,6 +8,8 @@ type Props = {
   onChecked: (checkType: number) => void;
   isChecked: boolean;
 };
+
+
 
 const Radio = ({ name, id, text, value, onChecked, isChecked }: Props) => {
   return (
@@ -20,7 +22,7 @@ const Radio = ({ name, id, text, value, onChecked, isChecked }: Props) => {
         name={name}
         hidden
         onChange={(e) => onChecked(Number(e.target.value))}
-        checked={isChecked}
+        checked={isChecked}  
       />
       <div className="radio">
         <div className="radio__check"></div>

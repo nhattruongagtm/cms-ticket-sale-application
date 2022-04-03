@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import Calendar, { DateTime } from "./Calendar";
+import Calendar, { DateTime, DateType } from "./Calendar";
 
-export type PickerPosition = "top-left" | "top-right" | "bottom-left" | "bottom-right";
+export type PickerPosition =
+  | "top-left"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-right";
 interface Props {
   onGetDate: (date: DateTime) => void;
   type: 0 | 1;
   date: DateTime;
   pos?: PickerPosition;
+  onGetWeek?: (days: DateType[]) => void;
 }
 
 interface Position {
@@ -15,7 +20,7 @@ interface Position {
   y: number;
 }
 
-const DatePicker = ({ onGetDate, type, date, pos }: Props) => {
+const DatePicker = ({ onGetDate, type, date, pos, onGetWeek }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch = useDispatch();
   const [position, setPosition] = useState<Position>({ x: 0, y: 30 });
@@ -29,7 +34,9 @@ const DatePicker = ({ onGetDate, type, date, pos }: Props) => {
     setIsOpen(!isOpen);
   };
 
- 
+  const handleGetWeek = (days: DateType[]) => {
+    onGetWeek && onGetWeek(days);
+  };
 
   return (
     <div className="home__profit__date calendar" id="calender">
@@ -60,6 +67,7 @@ const DatePicker = ({ onGetDate, type, date, pos }: Props) => {
         onGetDate={handleGetDate}
         isOpen={isOpen}
         pos={pos}
+        onGetWeek={handleGetWeek}
       />
     </div>
   );

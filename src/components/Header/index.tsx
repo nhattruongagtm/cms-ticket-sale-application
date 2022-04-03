@@ -6,7 +6,9 @@ const Header = (props: Props) => {
   return (
     <div className="header">
       <div className="header__logo">
-      <img src="./imgs/logo.svg" alt="" className="header__logo" />
+        <div className="">
+          <img src="./imgs/logo.svg" alt="" className="header__logo" />
+        </div>
       </div>
       <div className="header__main">
         <div className="header__search">
@@ -15,7 +17,7 @@ const Header = (props: Props) => {
         </div>
         <div className="header__notify">
           <i className="bx bx-envelope"></i>
-          <i className='bx bx-bell' ></i>
+          <i className="bx bx-bell"></i>
           <img src="./imgs/avatar.svg" alt="" />
         </div>
       </div>

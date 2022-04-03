@@ -17,6 +17,7 @@ import { db } from "./fbConfig";
 import { RefType } from "./generateData";
 import { CollectionReference, DocumentData } from "firebase/firestore";
 import { LineChart } from "../pages/Home/LineChart";
+import { DateTime } from "../components/Calendar";
 
 interface TicketStatus {
   used: number;
@@ -287,18 +288,16 @@ export const revenueByDate = (
   });
 };
 export const revenue = (
-  month: number,
-  year: number,
-  week?: number[]
+  dateTime: DateTime[]
 ): Promise<LineChart[]> => {
   return new Promise(async (resolve, reject) => {
     let result: LineChart[] = [];
-    week?.forEach((item) => {
-      revenueByDate(item, month, year)
+    dateTime.forEach((item) => {
+      revenueByDate(item.day, item.month, item.year)
         .then((res) => {
           result.push(res);
 
-          if (week.length === result.length) {
+          if (dateTime.length === result.length) {
             resolve(result);
           }
         })

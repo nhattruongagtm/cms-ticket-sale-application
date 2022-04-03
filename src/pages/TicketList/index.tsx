@@ -10,7 +10,7 @@ import { search } from "../../slice/Filter/filterSlice";
 import { displayAddModal, displayFilterModal } from "../../slice/ModalSlice";
 import { RootState } from "../../store";
 import { formatDate } from "../../utils/dateTime";
-import { exportCSV } from "../../utils/exportCSV";
+import { exportCSV, FormatKey } from "../../utils/exportCSV";
 import { filter } from "../../utils/filter";
 import { search as searchList } from "../../utils/filter";
 interface Props {}
@@ -106,18 +106,21 @@ const TicketList = (props: Props) => {
   }, [filterParams, keySearch]);
 
   const handleDownloadCSVFile = () => {
+
+    const mapKey: FormatKey<TicketListData> = {
+      bookingCode: "Booking code",
+      checkInPort: "Cổng check-in",
+      checkStatus: "Trạng thái đối soát",
+      exportDate: "Ngày hết hạn",
+      name: "Tên sự kiện",
+      status: "Tình trạng sử dụng",
+      ticketNumber: "Số vé",
+      typeName: "Tên loại vé",
+      usingDate: "Ngày sử dụng",
+    };
     exportCSV(
       {
-        label: [
-          "STT",
-          "Booking code",
-          "Số vé",
-          "Tên sự kiện",
-          "Tình trạng sử dụng",
-          "Ngày sử dụng",
-          "Ngày xuất vé",
-          "Cổng check-in",
-        ],
+        mapKey,
         list: ticketList,
       },
       "export.csv",

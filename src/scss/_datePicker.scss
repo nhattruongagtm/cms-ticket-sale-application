@@ -3,8 +3,10 @@
   // left: 0;
   // bottom: calc(100% + 5px);
   transform: scaleY(0.5);
-  min-width: calc(370px - 64px);
-  min-height: calc(396px - 48px);
+  min-width: calc(370px);
+  // min-width: calc(370px - 64px);
+  // min-height: calc(396px - 48px);
+  min-height: calc(396px);
   border-radius: 20px;
   background-color: white;
   padding: 24px 32px;
@@ -82,8 +84,107 @@
     }
   }
 
-  &__table{
+  &__head {
     width: 100%;
+    margin-bottom: 3.5px;
+    thead {
+      tr {
+        margin-bottom: 23px;
+        td {
+          font-size: 18px;
+          font-weight: 600;
+          color: #c55e00;
+        }
+      }
+    }
+    td {
+      text-align: center;
+      // height: 32px;
+      line-height: 32px;
+    }
   }
 
+  &__table {
+    margin: 0 auto;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0px 12.5px;
+
+    td {
+      cursor: pointer;
+      text-align: center;
+      height: 32px;
+      line-height: 32px;
+
+      &.date--none {
+        color: rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    tbody {
+      --border-size: 0%;
+      tr,
+      .date--week {
+        td {
+          font-size: 16px;
+          font-weight: 500;
+          width: 32px;
+          span {
+            display: block;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            transition: 0.1s;
+            margin: 0 auto;
+          }
+        }
+      }
+      .date--date {
+        span:hover {
+          background-color: $date-active;
+          color: white;
+          font-weight: 500;
+        }
+      }
+
+
+      .date--week:hover {
+        background-image: linear-gradient(to right,white 5%,$date-line 10% 90%,white 95%);
+        border-radius: 50px;
+        color: white;
+
+        td{
+          background-color: inherit;
+          color: white;
+          z-index: 2;
+        
+        }
+
+        td.active {
+         
+          span {
+            display: block;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            transition: 0.1s;
+            margin: 0 auto;
+            background-color: $date-active;
+            color: white;
+          }
+        }
+
+      }
+
+      td:first-child {
+        border-bottom-left-radius: var(--border-size);
+        border-top-left-radius: var(--border-size);
+        margin-left: 10px;
+      }
+      td:last-child {
+        border-bottom-right-radius: var(--border-size);
+        border-top-right-radius: var(--border-size);
+      }
+    }
+  }
 }

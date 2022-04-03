@@ -11,6 +11,7 @@ import {
 import { displayAddModal, displayUpdateModal } from "../../slice/ModalSlice";
 import { AppDispatch, RootState } from "../../store";
 import { formatDate, formatTime } from "../../utils/dateTime";
+import { exportCSV,FormatKey } from "../../utils/exportCSV";
 import { searchPackage } from "../../utils/filter";
 import { DateTime } from "../Calendar";
 
@@ -131,7 +132,6 @@ const PackageList = (props: Props) => {
   useEffect(() => {
     getAllPackages()
       .then((res) => {
-
         dispatch(updatePackageList(res));
         setTicketList(searchPackage(keySearch, ticketListState));
       })
@@ -143,6 +143,25 @@ const PackageList = (props: Props) => {
   useEffect(() => {
     setTicketList(searchPackage(keySearch, ticketListState));
   }, [ticketListState]);
+
+  const handleExportCSV = () =>{
+    const mapKey: FormatKey<TicketPackage> = {
+      id: 'Mã gói',
+      name: 'Tên gói',
+      appliedDate: 'Ngày áp dụng',
+      appliedTime: 'Giờ áp dụng',
+      expireDate: 'Ngày hết hạn',
+      expireTime: 'Giờ hết hạn',
+      simplePrice: 'Giá vé (VNĐ/Vé)',
+      comboPrice: 'Giá Combo (VNĐ/Combo)',
+      quantityForCombo: 'Số lượng vé combo',
+      status: 'Tình trạng',
+    }
+    exportCSV({
+      mapKey,
+      list: ticketList,
+    },"danh-sach-goi-ve.csv","package-list")
+  }
 
   return (
     <div className="content__main">
@@ -159,7 +178,7 @@ const PackageList = (props: Props) => {
             <img src=".././imgs/search.svg" alt="" />
           </div>
           <div className="ticket__list__action">
-            <button className="button">Xuất file (.csv)</button>
+            <button className="button" onClick={handleExportCSV}><a id="package-list">Xuất file (.csv)</a></button>
             <button className="button" onClick={handleDisplayAddModal}>
               Thêm gói vé
             </button>
@@ -173,6 +192,9 @@ const PackageList = (props: Props) => {
             showSizeChanger: false,
             pageSizeOptions: ["10", "20", "30"],
           }}
+          className="table__list--package"
+          
+          
         />
       </div>
     </div>

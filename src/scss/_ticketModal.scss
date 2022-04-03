@@ -3,7 +3,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.5);
-  width: calc(758px - 64px);
+  min-width: calc(758px - 64px);
+  // width: calc(758px - 64px);
   // height: calc(628px - 58px);
   border-radius: 16px;
   border: 1px solid black;

@@ -35,7 +35,7 @@ export const createPackage = async (ticket: TicketPackage) => {
 };
 
 export const generateTicket = () => {
-  for (let i = 5; i < 23; i++) {
+  for (let i = 5; i < 53; i++) {
     let ticketNumber = "";
     for (let j = 0; j < 5; j++) {
       ticketNumber += Math.floor(Math.random() * 10);
@@ -69,7 +69,7 @@ export const generateTicketPackages = () => {
       rdID += Math.floor(Math.random() * 9);
     }
     let rdName = ["Gói gia đình", "Gói sự kiện"];
-    const simplePrice = Math.floor(Math.random() * 4) * 100 + 1;
+    const simplePrice = Math.floor(Math.random() * 100) * 1000 + 15;
     const quantity = Math.floor(Math.random() * 5) + 1;
     createPackage({
       id: "ALTA" + rdID,

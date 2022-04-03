@@ -1,13 +1,20 @@
 body {
   font-size: 18px;
   font-family: $primary-font !important;
+  background-color: $primary;
+
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar{
+    width: 0px;
+  }
 }
 
 .app {
   max-width: 1920px;
   max-height: 1080px;
   background-color: $primary;
-  padding: 0 33px;
+  padding: 0 1.718%;
   position: relative;
   min-height: calc(100vh);
   display: flex;
@@ -32,10 +39,9 @@ body {
   cursor: pointer;
   transition: 0.2s;
 
-  &:hover{
+  &:hover {
     background-color: $orange-yellow;
     color: white;
-
   }
 }
 button.button--fill {
@@ -80,116 +86,125 @@ button.button--fill {
 
 .table__container {
 }
-.table__list {
-  max-width: 1567px;
-  width: 100%;
-  max-height: 624px;
-  // overflow-x: scroll;
-  table {
-    // min-width: 120%;
-    width: 100%;
-  }
+// .table__list {
+//   max-width: 1567px;
+//   width: 100%;
+//   max-height: 624px;
+//   // overflow-x: scroll;
+//   table {
+//     // min-width: 120%;
+//     width: 100%;
+//   }
+//   tr {
+//     font-size: 14px;
+//     line-height: 22px;
+//   }
+//   thead {
+//     width: 100%;
+//     background-color: $gray-light;
+
+//     tr {
+//       td {
+//         padding: 11px 0;
+//       }
+//     }
+//   }
+
+//   thead,
+//   tbody {
+//     tr {
+//       cursor: pointer;
+
+//       &:nth-child(even) {
+//         background-color: $table-item;
+//       }
+//       td {
+//         padding: 16px 0;
+//         // height: fit-content;
+//       }
+//       td {
+//         // display: inline-block;
+//         min-width: 50px;
+
+//         p {
+//           max-height: 30px;
+//           max-width: 200px;
+//           -webkit-line-clamp: 1;
+//           overflow: hidden;
+//           white-space: nowrap;
+//           visibility: visible;
+//           text-overflow: ellipsis;
+//         }
+//       }
+
+//       .tb__stt {
+//         // padding: 0 40px 0 45px;
+//         text-align: center;
+//       }
+//       .tb__code {
+//       }
+//       .tb__quantity {
+//         // padding: 0 50px 0 40px;
+//       }
+//       .tb__name {
+//       }
+//       td {
+//         border-collapse: collapse;
+//       }
+
+//       // status--here
+//       .tb__expire {
+//       }
+//       .tb__start {
+//         // padding: 0 50px;
+//       }
+//       .tb__port {
+//       }
+//       .tb__expire,
+//       .tb__start {
+//         // text-align: right;
+//       }
+//     }
+//   }
+
+//   tbody {
+//     tr {
+//       &:hover {
+//         background-color: $gray;
+//       }
+//       &:hover i {
+//         opacity: 1;
+//       }
+//       font-weight: 500;
+//       td {
+//         i {
+//           font-size: 20px;
+//           color: $text-light;
+//           opacity: 0;
+//           width: 100%;
+//           height: 100%;
+
+//           display: flex;
+//           justify-content: center;
+//           align-items: center;
+//         }
+//       }
+//     }
+//   }
+// }
+// .thead-list {
+//   font-weight: 600;
+//   font-size: 16px;
+//   line-height: 26px;
+// }
+
+.table__list--package {
   tr {
-    font-size: 14px;
-    line-height: 22px;
-  }
-  thead {
-    width: 100%;
-    background-color: $gray-light;
-
-    tr {
-      td {
-        padding: 11px 0;
-      }
+    td,
+    .ant-table-cell {
+      padding: 10px 5px !important;
     }
   }
-
-  thead,
-  tbody {
-    tr {
-      cursor: pointer;
-
-      &:nth-child(even) {
-        background-color: $table-item;
-      }
-      td {
-        padding: 16px 0;
-        // height: fit-content;
-      }
-      td {
-        // display: inline-block;
-        min-width: 50px;
-
-        p {
-          max-height: 30px;
-          max-width: 200px;
-          -webkit-line-clamp: 1;
-          overflow: hidden;
-          white-space: nowrap;
-          visibility: visible;
-          text-overflow: ellipsis;
-        }
-      }
-
-      .tb__stt {
-        // padding: 0 40px 0 45px;
-        text-align: center;
-      }
-      .tb__code {
-      }
-      .tb__quantity {
-        // padding: 0 50px 0 40px;
-      }
-      .tb__name {
-      }
-      td {
-        border-collapse: collapse;
-      }
-
-      // status--here
-      .tb__expire {
-      }
-      .tb__start {
-        // padding: 0 50px;
-      }
-      .tb__port {
-      }
-      .tb__expire,
-      .tb__start {
-        // text-align: right;
-      }
-    }
-  }
-
-  tbody {
-    tr {
-      &:hover {
-        background-color: $gray;
-      }
-      &:hover i {
-        opacity: 1;
-      }
-      font-weight: 500;
-      td {
-        i {
-          font-size: 20px;
-          color: $text-light;
-          opacity: 0;
-          width: 100%;
-          height: 100%;
-
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-      }
-    }
-  }
-}
-.thead-list {
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 26px;
 }
 
 .tb__status {
@@ -234,6 +249,10 @@ button.button--fill {
 }
 
 .tb__datetime {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   p {
     width: fit-content;
     display: flex;
@@ -249,20 +268,21 @@ button.button--fill {
 
   display: flex;
   align-items: center;
-  width: fit-content;
+  min-width: 80px;
   color: $orange-yellow;
   line-height: 1;
   gap: 5px;
-  span{
+ 
+  span {
     display: flex;
     align-items: center;
     height: 35px;
   }
   i {
     display: inline-flex;
-    color: $orange-yellow;
+    color: $orange-yellow !important;
     font-size: 22px;
-    opacity: 1;
+    opacity: 1 !important;
   }
 }
 
@@ -337,6 +357,7 @@ button.button--fill {
   .radio {
     width: 22px;
     height: 22px;
+    max-width: 22px;
     // width: 18px;
     // height: 18px;
     border: 2px solid $checkbox;

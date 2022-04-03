@@ -1,16 +1,17 @@
-import { DatePicker, Table } from "antd";
+import { Table } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllTickets } from "../../api/crudData";
 import { DateTime } from "../../components/Calendar";
+import DatePicker from "../../components/DatePicker";
 import Pagination from "../../components/Pagination";
 import Radio from "../../components/Radio";
 import TableList, { DataTable } from "../../components/TableList";
 import { CheckingTicketData, TicketListData } from "../../models/Ticket";
 import { checkingFilter } from "../../slice/Filter/filterSlice";
 import { RootState } from "../../store";
-import { compareTo, formatDate } from "../../utils/dateTime";
+import { compareTo, formatDate, getNow } from "../../utils/dateTime";
 import { filterCheckingList, search } from "../../utils/filter";
 interface Props {}
 
@@ -19,8 +20,8 @@ type CheckType = -1 | 0 | 1;
 
 export interface CheckingFilter {
   status?: CheckType;
-  dateFrom?: DateTime;
-  dateTo?: DateTime;
+  dateFrom: DateTime;
+  dateTo: DateTime;
   searchKey: string;
 }
 
@@ -30,6 +31,9 @@ const CheckTicket = (props: Props) => {
   const [filterInput, setFilterInput] = useState<CheckingFilter>({
     status: -1,
     searchKey: "",
+    dateFrom: {day: 0, month: 0, year: 0},
+    dateTo: {day: 0, month: 0, year: 0},
+    
   });
 
   const filterParams = useSelector(
@@ -86,6 +90,19 @@ const CheckTicket = (props: Props) => {
     },
   ];
 
+  const hanldeGetDateFrom = (date: DateTime) => {
+    setFilterInput({
+      ...filterInput,
+      dateFrom: date,
+    })
+  };
+  const hanldeGetDateTo = (date: DateTime) => {
+    setFilterInput({
+      ...filterInput,
+      dateTo: date,
+    })
+  };
+
   useEffect(() => {
     getAllTickets()
       .then((res) => {
@@ -126,11 +143,12 @@ const CheckTicket = (props: Props) => {
               type="number"
               placeholder="Tìm bằng số vé"
               value={filterInput.searchKey}
-              onChange={(e) =>{
-                setFilterInput({ ...filterInput, searchKey: e.target.value })
-                dispatch(checkingFilter({ ...filterInput, searchKey: e.target.value }))
-              }
-              }
+              onChange={(e) => {
+                setFilterInput({ ...filterInput, searchKey: e.target.value });
+                dispatch(
+                  checkingFilter({ ...filterInput, searchKey: e.target.value })
+                );
+              }}
             />
             <img src="./imgs/search.svg" alt="" />
           </div>
@@ -179,7 +197,7 @@ const CheckTicket = (props: Props) => {
             />
           </div>
           <p>Loại vé</p>
-          <span>Vé cổng</span>
+          <span className="check">Vé cổng</span>
           <p className="f">Từ ngày</p>
           <div
             className={`filter__date__pic filter--gray ${
@@ -188,24 +206,10 @@ const CheckTicket = (props: Props) => {
           >
             {/* <span>01/05/2022</span> <i className="bx bx-calendar"></i> */}
             <DatePicker
-              defaultValue={moment(
-                `${new Date().getDate()-3}/${
-                  new Date().getMonth() + 1
-                }/${new Date().getFullYear()}`,
-                "DD/MM/YYYY"
-              )}
-              
-              format={"DD/MM/YYYY"}
-              onChange={(e) =>
-                setFilterInput({
-                  ...filterInput,
-                  dateFrom: {
-                    day: e ? e.date() : 1,
-                    month: e ? e.month() + 1 : 1,
-                    year: e ? e.year() : 2023,
-                  },
-                })
-              }
+              date={filterInput.dateFrom}
+              onGetDate={hanldeGetDateFrom}
+              type={1}
+              pos="bottom-right"
             />
           </div>
           <p className="f">Đến ngày</p>
@@ -215,24 +219,10 @@ const CheckTicket = (props: Props) => {
             }`}
           >
             <DatePicker
-              defaultValue={moment(
-                `${new Date().getDate()-2}/${
-                  new Date().getMonth() + 1
-                }/${new Date().getFullYear()}`,
-                "DD/MM/YYYY"
-              )}
-              
-              format={"DD/MM/YYYY"}
-              onChange={(e) =>
-                setFilterInput({
-                  ...filterInput,
-                  dateTo: {
-                    day: e ? e.date() : 1,
-                    month: e ? e.month() + 1 : 1,
-                    year: e ? e.year() : 2023,
-                  },
-                })  
-              }
+              date={filterInput.dateTo}
+              onGetDate={hanldeGetDateTo}
+              type={1}
+              pos="bottom-right"
             />
             {/* <span>dd/mm/yy</span> <i className="bx bx-calendar"></i> */}
           </div>

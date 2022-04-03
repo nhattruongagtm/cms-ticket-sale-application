@@ -67,22 +67,48 @@ const PieChart = (props: Props) => {
       .catch((e) => {
         console.log(e);
       });
-  }, [pie.month,pie.year]);   
+  }, [pie.month, pie.year]);
   return (
     <div className="home__package">
       <div className="home__package__date">
-        <DatePicker onGetDate={handleGetDate} type={0} date={{day: 0, month: pie.month, year: pie.year}} />
+        <DatePicker
+          onGetDate={handleGetDate}
+          type={0}
+          date={{ day: 0, month: pie.month, year: pie.year }}
+        />
       </div>
       <div className="home__package__chart">
         <p className="home__chart__title sub__title">Gói gia đình</p>
         <div className="home__chart__pie">
           <Doughnut data={dataFamilyPie} />
+          { (pie.familyPackages.used !== 0 ||
+            pie.familyPackages.unused !== 0) && (
+              <>
+                <div className="chart__pie__tooltip chart__pie__used">
+                  {pie.familyPackages.unused}
+                </div>
+                <div className="chart__pie__tooltip chart__pie__unused">
+                  {pie.familyPackages.used}
+                </div>
+              </>
+            )}
         </div>
       </div>
       <div className="home__package__chart">
         <p className="home__chart__title sub__title">Gói sự kiện</p>
         <div className="home__chart__pie">
           <Doughnut data={dataEventPie} />
+          {(pie.eventPackages.used !== 0 ||
+            pie.eventPackages.unused !== 0) && (
+              <>
+                <div className="chart__pie__tooltip chart__pie__used">
+                  {pie.eventPackages.unused}
+                </div>
+                <div className="chart__pie__tooltip chart__pie__unused">
+                  {pie.eventPackages.used}
+                </div>
+              </>
+            )}
         </div>
       </div>
       <div className="home__package__chart">

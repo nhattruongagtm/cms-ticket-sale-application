@@ -1,4 +1,4 @@
-import { DateTime } from "../components/Calendar";
+import { DateTime, DateType } from "../components/Calendar";
 import { Time } from "../components/TimePicker";
 
 const isLessThan = (number: number, compare: number) => {
@@ -49,3 +49,53 @@ export const compareTo = (dateFrom: DateTime, dateTo: DateTime) => {
   }
   return true;
 };
+
+export const getNow = () => {
+  return {
+    day: new Date().getDate(),
+    month: new Date().getMonth() + 1,
+    year: new Date().getFullYear(),
+  };
+};
+
+export const getDaysOfMonth = (year: number, month: number) => {
+  return new Date(year, month, 0).getDate();
+};
+export const getDateBefore = (date: DateTime, numberOfDays: number) => {
+  const { day, month, year } = date;
+
+  const daysOfPrevMonth = getDaysOfMonth(month - 1, year);
+
+  let temp = day;
+  let days: DateType[] = [];
+  let type = 0;
+  for (let i = day; i > day - numberOfDays; i--) {
+    if (temp > 0) {
+      days.push({ type: type, value: temp });
+    } else {
+      temp = daysOfPrevMonth;
+      type = -1;
+      days.push({
+        type: type,
+        value: temp,
+      });
+    }
+    temp--;
+  }
+
+  return days;
+};
+export const getCurrency = (currencies: number[]) => {
+  const max = Math.max(...currencies);
+  if (max < 1000000) {
+    return "VNĐ";
+  }
+  return "tr";
+};
+
+export const convertRevenue = (number: number) =>{
+  if(number >= 1000000){
+    return Math.floor(number/1000000)
+  }
+  return number;
+}

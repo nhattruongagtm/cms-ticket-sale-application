@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FilterInput } from "../../components/Filter";
 import { CheckingFilter } from "../../pages/CheckTicket";
+import { getNow } from "../../utils/dateTime";
 interface FilterType {
   filter: FilterInput;
   search: string;
@@ -17,6 +18,11 @@ const initialState: FilterType = {
   checkingFilter: {
     status: -1,
     searchKey: "",
+    dateFrom: getNow(),
+    dateTo: {
+      ...getNow(),
+      day: getNow().day + 1,
+    }
   },
 };
 

@@ -1,38 +1,64 @@
-import { Line } from '@ant-design/plots'
-import React, { useEffect, useState } from 'react'
-import { revenue } from '../../api/crudData'
-import { DateTime } from '../../components/Calendar'
-import DatePicker from '../../components/DatePicker'
-
-type Props = {}
+import { Line } from "@ant-design/plots";
+import moment, { monthsShort } from "moment";
+import React, { useEffect, useState } from "react";
+import { revenue } from "../../api/crudData";
+import { DateTime, DateType } from "../../components/Calendar";
+import DatePicker from "../../components/DatePicker";
+import { convertRevenue, getCurrency, getDateBefore } from "../../utils/dateTime";
+type Props = {};
 
 export interface LineChart {
-    day: string;
-    revenue: number;
-  }
+  day: string;
+  revenue: number;
+}
 
 const LineChart = (props: Props) => {
   const [data, setData] = useState<LineChart[]>([]);
+  const [date, setDate] = useState<DateTime>({
+    day: new Date().getDate(),
+    month: new Date().getMonth() + 1,
+    year: new Date().getFullYear(),
+  });
+
+  const [week, setWeek] = useState<DateType[]>(() => {
+    return getDateBefore({ ...date }, 7).reverse();
+  });
 
   useEffect(() => {
-    // const data: LineChart[] = [
-    //   { day: "Thứ 2", revenue: 8 },
-    //   { day: "Thứ 3", revenue: 4 },
-    //   { day: "Thứ 4", revenue: 3.5 },
-    //   { day: "Thứ 5", revenue: 5 },
-    //   { day: "Thứ 6", revenue: 4.9 },
-    //   { day: "Thứ 7", revenue: 6 },
-    //   { day: "CN", revenue: 7 },
-    // ];
+    const dateTimeMap = week.map((item) => {
+      return {
+        day: item.value,
+        month:
+          item.type === 0
+            ? date.month
+            : item.type === -1
+            ? date.month < 2
+              ? 12
+              : date.month - 1
+            : date.month < 12
+            ? date.month + 1
+            : 1,
+        year:
+          item.type === 0
+            ? date.year
+            : item.type === -1
+            ? date.month === 1
+              ? date.year - 1
+              : date.year
+            : date.month === 12
+            ? date.year + 1
+            : date.year,
+      };
+    });
 
-    revenue(4,2022,[6,7,8,9,10,11,12]).then(res=>{
-      setData(res);
-      
-    }).catch(e=>{
-      console.log(e)
-    })
-
-  }, []);
+    revenue(dateTimeMap)
+      .then((res) => {
+        setData(res);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, [date.month, date.year, week]);
 
   const config = {
     data,
@@ -41,7 +67,7 @@ const LineChart = (props: Props) => {
     seriesField: "name",
     yAxis: {
       label: {
-        formatter: (v: any) => `${v}tr`,
+        formatter: (v: any) => `${v} ${getCurrency(data.map(item=>item.revenue))}`,
       },
     },
     // legend: {
@@ -56,26 +82,47 @@ const LineChart = (props: Props) => {
     },
   };
 
-    const handleGetDate = (date: DateTime) =>{
-        
-    }
+  const handleGetDate = (date: DateTime) => {
+    setDate(date);
+  };
+
+  const handleGetWeek = (days: DateType[]) => {
+    setWeek(days);
+  };
+
+  const totalRevenue = () => {
+    let rs = 0;
+
+    data.forEach((item) => {
+      rs += item.revenue;
+    });
+
+    return rs;
+  };
+
   return (
     <>
-    <div className="home__profit">
-          <p className="sub__title home__profit__title">Doanh thu</p>
-          <DatePicker onGetDate={handleGetDate} type={0} date={{day: 0, month: 0, year: 0}} pos='bottom-right'/> 
-        </div> 
-        <div className="home__chart">
-          <Line {...config} />
-        </div>
-        <div className="home__revenue">
-          <p>Tổng doanh thu theo tuần</p>
-          <p>
-            525.145.000 <span>đồng</span>
-          </p>
-        </div>
+      <div className="home__profit">
+        <p className="sub__title home__profit__title">Doanh thu</p>
+        <DatePicker
+          onGetDate={handleGetDate}
+          type={0}
+          date={{ day: 0, month: date.month, year: date.year }}
+          pos="bottom-right"
+          onGetWeek={handleGetWeek}
+        />
+      </div>
+      <div className="home__chart">
+        <Line {...config} />
+      </div>
+      <div className="home__revenue">
+        <p>Tổng doanh thu theo {data.length > 7 ? "tháng" : "tuần"}</p>
+        <p>
+          {totalRevenue()} <span>đồng</span>
+        </p>
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default LineChart
+export default LineChart;

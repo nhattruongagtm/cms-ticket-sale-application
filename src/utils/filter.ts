@@ -6,8 +6,8 @@ import { compareTo } from "./dateTime";
 
 export const filter = (filterParams: FilterInput, list: TicketListData[]) => {
   const { checkInPorts, status, dateFrom, dateTo } = filterParams;
-
-  const newList = list.filter((item) => {
+  let rs: TicketListData[] = [];
+  rs = list.filter((item) => {
     if (checkInPorts !== "0") {
       return checkInPorts.includes(item.checkInPort.toString() as CheckItem);
     } else {
@@ -15,10 +15,20 @@ export const filter = (filterParams: FilterInput, list: TicketListData[]) => {
     }
   });
   if (status === -1) {
-    return newList;
   } else {
-    return newList.filter((item) => item.status === status);
+    rs = rs.filter((item) => item.status === status);
   }
+  if (dateFrom && dateTo) {
+    if (dateFrom.day !== 0 && dateTo.day !== 0) {
+      rs = rs.filter(
+        (item) =>
+          compareTo(item.usingDate, dateTo) &&
+          compareTo(dateFrom, item.usingDate)
+      );
+    }
+  }
+
+  return rs;
 };
 
 export const search = (key: string, list: TicketListData[]) => {
@@ -31,9 +41,7 @@ export const search = (key: string, list: TicketListData[]) => {
 };
 export const searchPackage = (key: string, list: TicketPackage[]) => {
   if (key.trim() !== "") {
-    return list.filter(
-      (item) => item.id.toString().indexOf(key) !== -1
-    );
+    return list.filter((item) => item.id.toString().indexOf(key) !== -1);
   }
   return list;
 };
@@ -51,11 +59,13 @@ export const filterCheckingList = (
     result = list.filter((item) => item.checkStatus === status);
   }
   if (dateFrom && dateTo) {
-    result = result.filter(
-      (item) =>
-        !compareTo(item.usingDate, dateFrom) &&
-        compareTo(item.usingDate, dateTo)
-    );
+    if (dateFrom.day !== 0 && dateTo.day !== 0) {
+      result = result.filter(
+        (item) =>
+          compareTo(item.usingDate, dateTo) &&
+          compareTo(dateFrom, item.usingDate)
+      );
+    }
   }
 
   return result;

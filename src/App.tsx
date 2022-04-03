@@ -15,6 +15,7 @@ import { ModalStatus } from "./slice/ModalSlice";
 import { RootState } from "./store";
 import { filter } from "./utils/filter";
 import Loading from "./components/Loading";
+import { getDateBefore } from "./utils/dateTime";
 
 function App() {
   const modalState = useSelector((state: RootState) => state.modal.modalState);
@@ -34,7 +35,6 @@ function App() {
     // generateTicket()
     // generateTicketPackages()
 
-    
    
   }, []);
 

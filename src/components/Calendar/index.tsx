@@ -15,21 +15,47 @@ interface OtherTime {
   prev: number;
   next: number;
 }
+
+enum DateEnumType {
+  NOW = 0,
+  BEFORE = -1,
+  AFTER = 1,
+}
+
+interface DateTimeAndWeek {
+  dateTime: DateTime;
+  weeks: DateType[];
+}
+
+export interface DateType {
+  type: DateEnumType;
+  value: number;
+}
 export interface Position {
   top: number;
   left: number;
   onGetDate: (date: DateTime) => void;
   isOpen: boolean;
   pos?: PickerPosition;
+  onGetWeek?: (days: DateType[]) => void;
 }
-const Calendar = ({ top, left, onGetDate, isOpen, pos }: Position) => {
-  const [option, setOptions] = useState<DateOption>(0);
+const Calendar = ({
+  top,
+  left,
+  onGetDate,
+  isOpen,
+  pos,
+  onGetWeek,
+}: Position) => {
+  const [option, setOptions] = useState<number>(0);
 
   const dispatch = useDispatch();
 
   const handleGetRadio = (value: number) => {
-    option !== value && setOptions(value as DateOption);
+    value !== option && setOptions(value);
   };
+
+  const [dateTimeList, setDateTimeList] = useState<DateType[]>([]);
 
   const getDaysOfMonth = (year: number, month: number) => {
     return new Date(year, month, 0).getDate();
@@ -37,11 +63,7 @@ const Calendar = ({ top, left, onGetDate, isOpen, pos }: Position) => {
   const [dateTime, setDateTime] = useState<DateTime>(() => {
     const dateNow = new Date();
 
-    const monthYear = dateNow.getMonth();
-
-    const monthReferences = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-
-    const month = monthReferences[monthYear];
+    const month = dateNow.getMonth() + 1;
 
     const year = dateNow.getFullYear();
 
@@ -101,8 +123,6 @@ const Calendar = ({ top, left, onGetDate, isOpen, pos }: Position) => {
     setPrevDate({ prev: prevDate, next: nextDate > 0 ? 7 - nextDate : 0 });
   }, [dateTime]);
 
-  const daysOfMonth = getDaysOfMonth(dateTime.year, dateTime.month);
-
   const getDateFromPrevDate = () => {
     const rs = [];
     for (let i = prevDay; i > prevDay - prevDate.prev + 1; i--) {
@@ -132,14 +152,6 @@ const Calendar = ({ top, left, onGetDate, isOpen, pos }: Position) => {
         return dateTime;
     }
   };
-
-  useEffect(() => {
-    const datePicker = document.querySelector("#date__picker") as HTMLElement;
-    if (datePicker) {
-      // datePicker.style.top = `${top}%`;
-      // datePicker.style.left = `${left}px`;
-    }
-  }, []);
 
   const handleChooseDate = (index: number) => {
     onGetDate({ ...dateTime, day: index });
@@ -186,6 +198,89 @@ const Calendar = ({ top, left, onGetDate, isOpen, pos }: Position) => {
     }
   }, []);
 
+  const isSameDate = (day: number) => {
+    return (
+      new Date().getFullYear() === dateTime.year &&
+      new Date().getMonth() + 1 === dateTime.month &&
+      new Date().getDate() === day
+    );
+  };
+
+  useEffect(() => {
+    let dateList: DateType[] = [];
+    const prevList = getDateFromPrevDate().map((item) => {
+      return {
+        type: DateEnumType.BEFORE,
+        value: item,
+      };
+    });
+    dateList = [...dateList, ...prevList];
+
+    const daysOfMonth = getDaysOfMonth(dateTime.year, dateTime.month);
+
+    const nowList = Array.from(new Array(daysOfMonth)).map((item, index) => {
+      return {
+        type: DateEnumType.NOW,
+        value: index + 1,
+      };
+    });
+
+    dateList = [...dateList, ...nowList];
+
+    const nextList = Array.from(new Array(prevDate.next)).map(
+      (number, index) => {
+        return {
+          type: DateEnumType.AFTER,
+          value: index + 1,
+        };
+      }
+    );
+
+    dateList = [...dateList, ...nextList];
+
+    setDateTimeList(dateList);
+  }, [dateTime, prevDate]);
+
+  const handleGetWeek = (days: DateType[]) => {
+    if (option === 1) {
+      onGetWeek && onGetWeek(days);
+    } else {
+      onGetWeek && onGetWeek(dateTimeList);
+    }
+  };
+
+  const renderDateList = () => {
+    let content = [];
+    let count = 7;
+    for (let i = 0; i < Math.ceil(dateTimeList.length / 7); i++) {
+      content.push(
+        <tr
+          className={option === 0 ? "date--date" : "date--week"}
+          onClick={() => handleGetWeek(dateTimeList.slice(i * 7, i * 7 + 7))}
+        >
+          {dateTimeList.slice(i * 7, count).map((item, index) => (
+            <td
+              key={index}
+              onClick={() => handleChooseDate(item.value)}
+              className={`${
+                item.type !== DateEnumType.NOW ? "date--none" : ""
+              } ${
+                index === dateTimeList.slice(i * 7, count).length - 1 ||
+                index === 0
+                  ? "active"
+                  : ""
+              }`}
+            >
+              <span>{item.value}</span>
+            </td>
+          ))}
+        </tr>
+      );
+      count += 7;
+    }
+    return content;
+  };
+
   return (
     <>
       <div
@@ -209,68 +304,24 @@ const Calendar = ({ top, left, onGetDate, isOpen, pos }: Position) => {
         </div>
         <div className="date__picker__options">
           <Radio
-            id="picker__day"
+            id="day__picker"
             value={0}
             isChecked={option === 0 ? true : false}
-            name="a"
-            text="Theo ngày"
             onChecked={handleGetRadio}
+            name="picker"
+            text="Theo ngày"
           />
           <Radio
-            id="picker__week"
+            id="week__picker"
             value={1}
             isChecked={option === 1 ? true : false}
-            name="b"
-            text="Theo tuần"
             onChecked={handleGetRadio}
+            name="picker"
+            text="Theo tuần"
           />
         </div>
-        {/* <ul className="date__picker__title">
-          <li>T2</li>
-          <li>T3</li>
-          <li>T4</li>
-          <li>T5</li>
-          <li>T6</li>
-          <li>T7</li>
-          <li>CN</li>
-        </ul>
-        <ul className="date__picker__main">
-          {getDateFromPrevDate().map((number, index) => (
-            <li
-              className="date--none"
-              key={index}
-              onClick={() => setDateTime({ ...dateTime, day: number })}
-            >
-              {number}
-            </li>
-          ))}
 
-          {Array.from(new Array(daysOfMonth)).map((number, index) => (
-            <li
-              key={index}
-              onClick={() => handleChooseDate(index + 1)}
-              className={`${
-                new Date().getFullYear() === dateTime.year &&
-                new Date().getMonth() + 1 === dateTime.month &&
-                new Date().getDate() === index + 1
-                  ? "active"
-                  : ""
-              }`}
-            >
-              {index + 1}
-            </li>
-          ))}
-          {Array.from(new Array(prevDate.next)).map((number, index) => (
-            <li
-              className="date--none"
-              key={index}
-              onClick={() => setDateTime({ ...dateTime, day: index + 1 })}
-            >
-              {index + 1}
-            </li>
-          ))}
-        </ul> */}
-        <table className="date__picker__table">
+        <table className="date__picker__head">
           <thead>
             <tr>
               <td>T2</td>
@@ -282,25 +333,9 @@ const Calendar = ({ top, left, onGetDate, isOpen, pos }: Position) => {
               <td>CN</td>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              {Array.from(new Array(daysOfMonth)).slice(0,7).map((number, index) => (
-                <td
-                  key={index}
-                  onClick={() => handleChooseDate(index + 1)}
-                  className={`${
-                    new Date().getFullYear() === dateTime.year &&
-                    new Date().getMonth() + 1 === dateTime.month &&
-                    new Date().getDate() === index + 1
-                      ? "active"
-                      : ""
-                  }`}
-                >
-                  {index + 1}
-                </td>
-              ))}
-            </tr>
-          </tbody>
+        </table>
+        <table className="date__picker__table">
+          <tbody>{renderDateList()}</tbody>
         </table>
       </div>
     </>
