@@ -25,6 +25,26 @@
         font-size: 25px;
         color: $orange-yellow;
       }
+
+      &:hover .date__close{
+        display: block;
+      }
+      &:hover .date__icon{
+        display: none;
+      }
+      .date__icon{
+
+      }
+      .date__close{
+        color: rgb(204, 204, 204);
+        cursor: pointer;
+        display: none;
+        
+        &:hover{
+          color: rgb(173, 173, 173);
+        }
+        
+      }
     }
     &__time {
       // width: calc(129px - 24px);

@@ -27,11 +27,12 @@ const Filter = (props: Props) => {
   const dispatch = useDispatch();
   const modalState = useSelector((state: RootState) => state.modal.modalState);
   const [radioValue, setRadioValue] = useState<number>(-1);
+  const fakeDate = {day: 0, month: 0, year: 0};
   const [filterForm, setFilterForm] = useState<FilterInput>({
     status: -1,
     checkInPorts: "0",
-    dateFrom: {day: 0, month: 0, year: 0},
-    dateTo: {day: 0, month: 0, year: 0},
+    dateFrom: fakeDate,
+    dateTo: fakeDate,
   });
 
   const handleFilter = () => {
@@ -114,6 +115,18 @@ const Filter = (props: Props) => {
       dateTo: date,
     });
   };
+  const handleResetDateFrom = () =>{
+    setFilterForm({
+      ...filterForm,
+      dateFrom: fakeDate
+    })
+  }
+  const handleResetDateTo = () =>{
+    setFilterForm({
+      ...filterForm,
+      dateTo: fakeDate
+    })
+  }
   return (
     <div
       className={
@@ -126,11 +139,11 @@ const Filter = (props: Props) => {
       <div className="filter__date">
         <div className="filter__from">
           <p className="filter__sub__title">Từ ngày</p>
-          <DatePicker onGetDate={handleGetDateFrom} type={1} date={filterForm.dateFrom as DateTime} pos="bottom-right"/>
+          <DatePicker onGetDate={handleGetDateFrom} type={1} date={filterForm.dateFrom as DateTime} pos="bottom-right" onResetDate={handleResetDateFrom}/>
         </div>
         <div className="filter__from">
           <p className="filter__sub__title">Đến ngày</p>
-          <DatePicker onGetDate={handleGetDateTo} type={1} date={filterForm.dateTo as DateTime} pos="bottom-left"/>
+          <DatePicker onGetDate={handleGetDateTo} type={1} date={filterForm.dateTo as DateTime} pos="bottom-left" onResetDate={handleResetDateTo}/>
         </div>
       </div>
       <div className="filter__status">

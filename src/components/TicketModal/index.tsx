@@ -36,28 +36,26 @@ const TicketModal = (props: Props) => {
     simplePrice: 0,
     status: 0,
   };
-  const [inputForm, setInputForm] = useState<InputForm & PackageTypes>({
+  const [inputForm, setInputForm] = useState<InputForm>({
     ...initialForm,
-    check: [],
   });
 
+  const [priceCheck,setPriceCheck] = useState<number[]>([]);
+
   const handleCheckType = (type: number) => {
-    if (inputForm.check.length === 0) {
-      setInputForm({
-        ...inputForm,
-        check: [...inputForm.check, type],
-      });
+    if (priceCheck.length === 0) {
+     setPriceCheck([
+       ...priceCheck,type
+     ])
     } else {
-      if (inputForm.check.includes(type)) {
-        setInputForm({
-          ...inputForm,
-          check: [...inputForm.check.filter((item) => item !== type)],
-        });
+      if (priceCheck.includes(type)) {
+        setPriceCheck(
+          [...priceCheck.filter((item) => item !== type)]
+        )
       } else {
-        setInputForm({
-          ...inputForm,
-          check: [...inputForm.check, type],
-        });
+        setPriceCheck([
+          ...priceCheck,type
+        ])
       }
     }
   };
@@ -65,15 +63,15 @@ const TicketModal = (props: Props) => {
   const handleSubmitModal = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const input: Omit<InputForm & PackageTypes,"check"> = {...inputForm}
-
-    if(editData.id === ''){
-      // create package
-      dispatch(requestCreatePackage(input))
-    }
-    else{
-      // edit package
-      dispatch(requestUpdatePackage(input))
+    if(priceCheck.length >= 1 && inputForm.name.trim() !== ""){
+      if(editData.id === ''){
+        // create package
+        dispatch(requestCreatePackage(inputForm))
+      }
+      else{
+        // edit package
+        dispatch(requestUpdatePackage(inputForm))
+      }
     }
   };
 
@@ -83,8 +81,11 @@ const TicketModal = (props: Props) => {
     setInputForm({
       ...inputForm,
       ...editData,
-      check: [simplePrice, comboPrice],
+      
     });
+    setPriceCheck(
+      [simplePrice, comboPrice]
+    )
   }, [editData]);
 
   const handleGetUsingDate = (date: DateTime) => {
@@ -212,7 +213,7 @@ const TicketModal = (props: Props) => {
             <div className="price__input__line">
               <Checkbox
                 id="simple__price"
-                isChecked={inputForm.check.includes(1) ? true : false}
+                isChecked={priceCheck.includes(1) ? true : false}
                 value={"1"}
                 text="Vé lẻ (vnđ/vé) với giá"
                 onChecked={() => handleCheckType(1)}
@@ -228,7 +229,7 @@ const TicketModal = (props: Props) => {
                     simplePrice: Number(e.target.value),
                   })
                 }
-                disabled={!inputForm.check.includes(1)}
+                disabled={!priceCheck.includes(1)}
               />{" "}
               <span>/ vé</span>
             </div>
@@ -240,7 +241,7 @@ const TicketModal = (props: Props) => {
               <Checkbox
                 id="combo__price"
                 isChecked={
-                  inputForm.check.includes(2)
+                  priceCheck.includes(2)
                     ? true
                     : false
                 }
@@ -259,7 +260,7 @@ const TicketModal = (props: Props) => {
                     comboPrice: Number(e.target.value),
                   })
                 }
-                disabled={!inputForm.check.includes(2)}
+                disabled={!priceCheck.includes(2)}
               />{" "}
               <span>/</span>
               <input
@@ -277,7 +278,7 @@ const TicketModal = (props: Props) => {
                     quantityForCombo: Number(e.target.value),
                   })
                 }
-                disabled={!inputForm.check.includes(2)}
+                disabled={!priceCheck.includes(2)}
               />{" "}
               <span> vé</span>
             </div>
@@ -289,6 +290,7 @@ const TicketModal = (props: Props) => {
             onChange={(e) =>
               setInputForm({ ...inputForm, status: Number(e.target.value) })
             }
+            value={inputForm.status}
           >
             <option value={0}>Đang áp dụng</option>
             <option value={1}>Tắt</option>

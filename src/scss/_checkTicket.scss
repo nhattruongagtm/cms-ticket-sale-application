@@ -4,13 +4,15 @@
   gap: 24px;
 
   &__main {
-    width: 70%;
+    // width: 70%;
     border-radius: 24px;
     background-color: white;
     padding: 24px;
-    max-height: calc(963px - 48px);
+    // max-height: calc(963px - 48px);
+    max-height: calc(963px);
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
     
 
     .check__features {
@@ -36,8 +38,10 @@
     border-radius: 24px;
     background-color: white;
     padding: 24px;
-    max-height: calc(963px - 48px);
-    flex-grow: 1;
+    max-height: calc(963px);
+    // max-height: calc(963px - 48px);
+    // flex-grow: 1;
+    min-width: 28.46%;
 
     .check__filter__title {
       font-size: 24px;

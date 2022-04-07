@@ -13,6 +13,7 @@ interface Props {
   date: DateTime;
   pos?: PickerPosition;
   onGetWeek?: (days: DateType[]) => void;
+  onResetDate?: () => void;
 }
 
 interface Position {
@@ -20,7 +21,14 @@ interface Position {
   y: number;
 }
 
-const DatePicker = ({ onGetDate, type, date, pos, onGetWeek }: Props) => {
+const DatePicker = ({
+  onGetDate,
+  type,
+  date,
+  pos,
+  onGetWeek,
+  onResetDate,
+}: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch = useDispatch();
   const [position, setPosition] = useState<Position>({ x: 0, y: 30 });
@@ -36,6 +44,10 @@ const DatePicker = ({ onGetDate, type, date, pos, onGetWeek }: Props) => {
 
   const handleGetWeek = (days: DateType[]) => {
     onGetWeek && onGetWeek(days);
+  };
+
+  const handleResetDate = () => {
+    onResetDate && onResetDate();
   };
 
   return (
@@ -60,7 +72,12 @@ const DatePicker = ({ onGetDate, type, date, pos, onGetWeek }: Props) => {
           </>
         )}
       </span>
-      <i className="bx bx-calendar-alt"></i>
+      {onResetDate && (
+        <i className="bx bx-x-circle date__close" onClick={handleResetDate}></i>
+      )}
+      <i
+        className={`bx bx-calendar-alt ${onResetDate ? "date__icon" : ""}`}
+      ></i>
       <Calendar
         top={position.y + 5}
         left={position.x}

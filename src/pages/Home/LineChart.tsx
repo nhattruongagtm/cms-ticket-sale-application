@@ -1,10 +1,14 @@
-import { Line } from "@ant-design/plots";
+import { Area, Line } from "@ant-design/plots";
 import moment, { monthsShort } from "moment";
 import React, { useEffect, useState } from "react";
 import { revenue } from "../../api/crudData";
 import { DateTime, DateType } from "../../components/Calendar";
 import DatePicker from "../../components/DatePicker";
-import { convertRevenue, getCurrency, getDateBefore } from "../../utils/dateTime";
+import {
+  convertRevenue,
+  getCurrency,
+  getDateBefore,
+} from "../../utils/dateTime";
 type Props = {};
 
 export interface LineChart {
@@ -64,10 +68,24 @@ const LineChart = (props: Props) => {
     data,
     xField: "day",
     yField: "revenue",
-    seriesField: "name",
+    // seriesField: "name",
     yAxis: {
       label: {
-        formatter: (v: any) => `${v} ${getCurrency(data.map(item=>item.revenue))}`,
+        formatter: (v: any) =>
+          `${v} ${getCurrency(data.map((item) => item.revenue))}`,
+      },
+    },
+    xAxis: {
+      range: [0, 1],
+    },
+    areaStyle: () => {
+      return {
+        fill: "l(270) 0:#ffffff 0.5:#ffa010 1:#da8300",
+      };
+    },
+    theme: {
+      styleSheet: {
+        brandColor: "#FF993C",
       },
     },
     // legend: {
@@ -113,7 +131,7 @@ const LineChart = (props: Props) => {
         />
       </div>
       <div className="home__chart">
-        <Line {...config} />
+        <Area {...config} />
       </div>
       <div className="home__revenue">
         <p>Tổng doanh thu theo {data.length > 7 ? "tháng" : "tuần"}</p>
