@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { TicketListData } from "../../models/Ticket";
 
 export enum ModalStatus {
   HIDDEN_MODAL = 0,
@@ -10,10 +11,12 @@ export enum ModalStatus {
 export interface IModalState {
   modalState: number;
   datePicker: boolean;
+  changeDateModal: TicketListData | undefined;
 }
 const initialState: IModalState = {
   modalState: ModalStatus.HIDDEN_MODAL,
   datePicker: false,
+  changeDateModal: undefined,
 };
 
 const modelSlice = createSlice({
@@ -32,8 +35,9 @@ const modelSlice = createSlice({
     hiddenModal: (state) => {
       state.modalState = ModalStatus.HIDDEN_MODAL;
     },
-    displayChangeDateModal: (state) => {
+    displayChangeDateModal: (state,action: PayloadAction<TicketListData>) => {
       state.modalState = ModalStatus.CHANGE_DATE_MODAL;
+      state.changeDateModal = action.payload;
     },
   },
 });

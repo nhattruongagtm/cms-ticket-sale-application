@@ -243,6 +243,27 @@ export const createPackage = (
     }
   });
 };
+export const createTicket = (
+  ticket: TicketPackage
+): Promise<TicketPackage | boolean> => {
+  return new Promise(async (resolve, reject) => {
+    let id = "ALTA";
+    for (let i = 0; i < 5; i++) {
+      id += Math.floor(Math.random() * 10);
+    }
+    const packageRef = doc(db, RefType.TICKET_DOCS, id);
+
+    try {
+      await setDoc(packageRef, { ...ticket, id });
+      resolve({
+        ...ticket,
+        id: id,
+      });
+    } catch (error) {
+      reject(false);
+    }
+  });
+};
 export const revenueByDate = (
   day: number,
   month: number,
@@ -287,9 +308,7 @@ export const revenueByDate = (
     }
   });
 };
-export const revenue = (
-  dateTime: DateTime[]
-): Promise<LineChart[]> => {
+export const revenue = (dateTime: DateTime[]): Promise<LineChart[]> => {
   return new Promise(async (resolve, reject) => {
     let result: LineChart[] = [];
     dateTime.forEach((item) => {
@@ -305,5 +324,23 @@ export const revenue = (
           reject(e);
         });
     });
+  });
+};
+
+export const updateTicketStatus = (
+  ticket: TicketListData
+): Promise<boolean> => {
+  return new Promise(async (resolve, reject) => {
+    const ticketRef = doc(db, RefType.TICKET_DOCS, ticket.bookingCode);
+
+    try {
+      await updateDoc(ticketRef, {
+        ...ticket,
+        status: 0,
+      });
+      resolve(true);
+    } catch (error) {
+      reject(false);
+    }
   });
 };

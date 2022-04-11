@@ -7,7 +7,12 @@ import Pagination from "../../components/Pagination";
 import TableList, { DataTable } from "../../components/TableList";
 import { TicketListData } from "../../models/Ticket";
 import { search } from "../../slice/Filter/filterSlice";
-import { displayAddModal, displayFilterModal } from "../../slice/ModalSlice";
+import {
+  loadTicketList,
+  requestUpdateStatus,
+  updateDate,
+} from "../../slice/LoadData/loadTicketList";
+import { displayAddModal, displayChangeDateModal, displayFilterModal } from "../../slice/ModalSlice";
 import { RootState } from "../../store";
 import { formatDate } from "../../utils/dateTime";
 import { exportCSV, FormatKey } from "../../utils/exportCSV";
@@ -21,9 +26,24 @@ const TicketList = (props: Props) => {
   const dispatch = useDispatch();
   const filterParams = useSelector((state: RootState) => state.filter.filter);
   const searchKey = useSelector((state: RootState) => state.filter.search);
+  const ticketsFromStore = useSelector(
+    (state: RootState) => state.tickets.list
+  );
   const [ticketList, setTicketList] = useState<TicketListData[]>([]);
+  const [displayTooltip, setDisplayTooltip] = useState<number>(-1);
   const [isLoading, setIsLoading] = useState(false);
   const [keySearch, setKeySearch] = useState<string>("");
+
+  const handleDisplayTooltip = (index: number) => {
+    setDisplayTooltip(index);
+  };
+
+  const handleUpdateTicket = (item: TicketListData) => {
+    dispatch(requestUpdateStatus(item));
+    setTimeout(() => {
+      setDisplayTooltip(-1);
+    }, 100);
+  };
 
   const columns = [
     {
@@ -89,24 +109,53 @@ const TicketList = (props: Props) => {
       key: "checkInPort",
       render: (port: number) => "Cổng " + port,
     },
+    {
+      options: "",
+      dataIndex: "options",
+      key: "options",
+      render: (text: string, record: TicketListData) => (
+        <div
+          className="tickets__options__tooltip"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDisplayTooltip(ticketList.indexOf(record));
+          }}
+        >
+          <i className="bx bx-dots-vertical-rounded tickets__options"></i>
+
+          <div
+            className={`item__tooltip ${
+              displayTooltip === ticketList.indexOf(record) ? "display" : ""
+            }`}
+          >
+            <li onClick={() => handleUpdateTicket(record)}>Sử dụng vé</li>
+            <li onClick={()=>{
+              dispatch(displayChangeDateModal(record));
+              setTimeout(()=>{setDisplayTooltip(-1);},200)
+            }}>Đổi ngày sử dụng</li>
+            <div className="triangle"></div>
+          </div>
+        </div>
+      ),
+    },
   ];
 
   useEffect(() => {
-    const { checkInPorts, status, dateFrom, dateTo } = filterParams;
-
     getAllTickets()
       .then((res) => {
-        const list = searchList(keySearch, filter(filterParams, res));
-
-        setTicketList(list);
+        dispatch(loadTicketList(res));
       })
       .catch((e) => {
         console.log(e);
       });
   }, [filterParams, keySearch]);
 
-  const handleDownloadCSVFile = () => {
+  useEffect(() => {
+    const list = searchList(keySearch, filter(filterParams, ticketsFromStore));
+    setTicketList(list);
+  }, [ticketsFromStore]);
 
+  const handleDownloadCSVFile = () => {
     const mapKey: FormatKey<TicketListData> = {
       bookingCode: "Booking code",
       checkInPort: "Cổng check-in",
@@ -133,6 +182,8 @@ const TicketList = (props: Props) => {
     dispatch(search(e.target.value));
   };
 
+  console.log(displayTooltip);
+
   return (
     <LoadingContext.Provider value={isLoading}>
       <div className="content__main">
@@ -149,7 +200,10 @@ const TicketList = (props: Props) => {
               <img src="./imgs/search.svg" alt="" />
             </div>
             <div className="ticket__list__action">
-              <button onClick={() => dispatch(displayFilterModal())} className="button">
+              <button
+                onClick={() => dispatch(displayFilterModal())}
+                className="button"
+              >
                 <i className="bx bx-filter-alt"></i>Lọc
               </button>
               <button onClick={handleDownloadCSVFile} className="button">
@@ -167,6 +221,7 @@ const TicketList = (props: Props) => {
               showSizeChanger: false,
               pageSizeOptions: ["10", "20", "30"],
             }}
+            className="ticket__list__table"
           />
         </div>
       </div>

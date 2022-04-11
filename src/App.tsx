@@ -35,7 +35,6 @@ function App() {
     // generateTicket()
     // generateTicketPackages()
 
-   
   }, []);
 
   const Layer = () => {
@@ -60,7 +59,7 @@ function App() {
       <Layer />
       <Filter />
       <TicketModal />
-      {/* <ChangeDateModal/> */}
+      <ChangeDateModal/>
       <Loading/>
     </div>
   );

@@ -466,7 +466,8 @@ button.button--fill {
   left: 50%;
   transform: translate(-50%, -30%);
   width: calc(758px - 64px);
-  height: calc(365px - 56px);
+  // height: calc(365px - 56px);
+  height: calc(365px);
   background-color: white;
   border: 1px solid black;
   border-radius: 10px;
@@ -478,6 +479,7 @@ button.button--fill {
   transition: 0.3s;
   opacity: 0;
   visibility: hidden;
+  z-index: 30;
 
   &--display {
     transform: translate(-50%, -50%);
@@ -513,6 +515,10 @@ button.button--fill {
     .change__main__content {
       font-weight: 500;
       // line-height: 19.5px;
+
+      .change__main__date{
+        width: fit-content;
+      }
     }
   }
   .change__main__actions {

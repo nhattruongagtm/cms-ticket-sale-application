@@ -5,17 +5,17 @@ export enum RefType {
   TICKET_DOCS = "tickets",
   PACKAGES_DOCS = "packages",
 }
-export const createTicket = async (ticket: TicketListData) => {
-  const ticketRef = collection(db, RefType.TICKET_DOCS);
-  try {
-    const docRef = await addDoc(ticketRef, ticket);
-    if (docRef.id) {
-      return true;
-    }
-  } catch (error) {
-    return false;
-  }
-};
+// export const createTicket = async (ticket: TicketListData) => {
+//   const ticketRef = collection(db, RefType.TICKET_DOCS);
+//   try {
+//     const docRef = await addDoc(ticketRef, ticket);
+//     if (docRef.id) {
+//       return true;
+//     }
+//   } catch (error) {
+//     return false;
+//   }
+// };
 export const createPackage = async (ticket: TicketPackage) => {
   let rdID = "ALTA";
   for (let j = 0; j < 5; j++) {
@@ -33,15 +33,31 @@ export const createPackage = async (ticket: TicketPackage) => {
     return false;
   }
 };
+export const createTicket = async (ticket: TicketListData) => {
+  const ticketRef = doc(db, RefType.TICKET_DOCS, ticket.bookingCode);
+
+  try {
+    await setDoc(ticketRef, {
+      ...ticket,
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
 
 export const generateTicket = () => {
   for (let i = 5; i < 53; i++) {
     let ticketNumber = "";
+    let rdID = "ALTA";
+    for (let a = 0; a < 5; a++) {
+      rdID += Math.floor(Math.random() * 9);
+    }
     for (let j = 0; j < 5; j++) {
       ticketNumber += Math.floor(Math.random() * 10);
     }
     createTicket({
-      bookingCode: "AFGRECB" + i + 1,
+      bookingCode: rdID,
       checkInPort: Math.floor(Math.random() * 5) + 1,
       exportDate: {
         day: Math.floor(Math.random() * 31) + 1,
