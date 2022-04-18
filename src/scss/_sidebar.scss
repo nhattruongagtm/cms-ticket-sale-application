@@ -16,7 +16,13 @@
       padding: 15px 26px;
       cursor: pointer;
       img {
+        width: 20px;
+        height: 20px;
+        background-repeat: no-repeat;
+        background-size: contain;
+        
       }
+     
       span {
         margin-left: 25px;
       }
@@ -26,6 +32,10 @@
       color: white;
       border-radius: 8px;
       font-weight: bold;
+
+      img{
+        filter: invert(1);
+      }
     }
     li {
       padding-left: 80px;
@@ -38,7 +48,6 @@
       &.active {
         font-weight: 700;
       }
-
     }
   }
   &__copyright {
@@ -62,7 +71,7 @@
       align-items: center;
       flex-wrap: nowrap;
 
-      span{
+      span {
         display: inline-flex;
         flex-wrap: nowrap;
       }

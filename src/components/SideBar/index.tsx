@@ -14,22 +14,22 @@ const SideBar = (props: Props) => {
   const routeList: IRoute[] = [
     {
       path: RoutePath.HOME_PAGE,
-      icon: "bx bx-home-alt",
+      icon: "./imgs/home.svg",
       title: "Trang chủ",
     },
     {
       path: RoutePath.TICKET_MANAGE_PAGE,
-      icon: "bx bx-home-alt",
+      icon: "./imgs/ticket-mange.svg",
       title: "Quản lý vé",
     },
     {
       path: RoutePath.TICKET_CHECK_PAGE,
-      icon: "bx bx-home-alt",
+      icon: "./imgs/check-ticket.svg",
       title: "Đối soát vé",
     },
     {
       path: RoutePath.PACKAGE_PAGE,
-      icon: "bx bx-home-alt",
+      icon: "./imgs/setting.svg",
       title: "Cài đặt",
     },
   ];
@@ -43,7 +43,8 @@ const SideBar = (props: Props) => {
       <ul className="navigation">
         {routeList.map((route) => (
           <NavLink to={route.path} key={route.path}>
-            <i className={route.icon}></i>
+            {/* <i className={route.icon}></i> */}
+            <img src={route.icon} alt="" />
             <span>{route.title}</span>
           </NavLink>
         ))}

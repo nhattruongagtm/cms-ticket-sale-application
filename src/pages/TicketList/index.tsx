@@ -12,7 +12,11 @@ import {
   requestUpdateStatus,
   updateDate,
 } from "../../slice/LoadData/loadTicketList";
-import { displayAddModal, displayChangeDateModal, displayFilterModal } from "../../slice/ModalSlice";
+import {
+  displayAddModal,
+  displayChangeDateModal,
+  displayFilterModal,
+} from "../../slice/ModalSlice";
 import { RootState } from "../../store";
 import { formatDate } from "../../utils/dateTime";
 import { exportCSV, FormatKey } from "../../utils/exportCSV";
@@ -121,20 +125,30 @@ const TicketList = (props: Props) => {
             handleDisplayTooltip(ticketList.indexOf(record));
           }}
         >
-          <i className="bx bx-dots-vertical-rounded tickets__options"></i>
+          {record.status === 1 && (
+            <>
+              <i className="bx bx-dots-vertical-rounded tickets__options"></i>
 
-          <div
-            className={`item__tooltip ${
-              displayTooltip === ticketList.indexOf(record) ? "display" : ""
-            }`}
-          >
-            <li onClick={() => handleUpdateTicket(record)}>Sử dụng vé</li>
-            <li onClick={()=>{
-              dispatch(displayChangeDateModal(record));
-              setTimeout(()=>{setDisplayTooltip(-1);},200)
-            }}>Đổi ngày sử dụng</li>
-            <div className="triangle"></div>
-          </div>
+              <div
+                className={`item__tooltip ${
+                  displayTooltip === ticketList.indexOf(record) ? "display" : ""
+                }`}
+              >
+                <li onClick={() => handleUpdateTicket(record)}>Sử dụng vé</li>
+                <li
+                  onClick={() => {
+                    dispatch(displayChangeDateModal(record));
+                    setTimeout(() => {
+                      setDisplayTooltip(-1);
+                    }, 200);
+                  }}
+                >
+                  Đổi ngày sử dụng
+                </li>
+                <div className="triangle"></div>
+              </div>
+            </>
+          )}
         </div>
       ),
     },
@@ -182,8 +196,6 @@ const TicketList = (props: Props) => {
     dispatch(search(e.target.value));
   };
 
-  console.log(displayTooltip);
-
   return (
     <LoadingContext.Provider value={isLoading}>
       <div className="content__main">
@@ -207,9 +219,7 @@ const TicketList = (props: Props) => {
                 <i className="bx bx-filter-alt"></i>Lọc
               </button>
               <button onClick={handleDownloadCSVFile} className="button">
-                <a href="" id="export-csv" download={""}>
-                  Xuất file (.csv)
-                </a>
+                <a id="export-csv">Xuất file (.csv)</a>
               </button>
             </div>
           </div>

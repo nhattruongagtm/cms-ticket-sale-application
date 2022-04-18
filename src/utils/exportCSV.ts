@@ -41,8 +41,6 @@ export const convertToString = (
   if (list.length > 0) {
     const keys = Object.keys(list[0]);
 
-    console.log(keys)
-
     result += "STT,";
     keys.forEach((item, index) => {
       if (index !== keys.length - 1) {

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { revenue } from "../../api/crudData";
 import { DateTime, DateType } from "../../components/Calendar";
 import DatePicker from "../../components/DatePicker";
+import { formatCurrency } from "../../utils/convertCurrency";
 import {
   convertRevenue,
   getCurrency,
@@ -136,7 +137,7 @@ const LineChart = (props: Props) => {
       <div className="home__revenue">
         <p>Tổng doanh thu theo {data.length > 7 ? "tháng" : "tuần"}</p>
         <p>
-          {totalRevenue()} <span>đồng</span>
+          {formatCurrency(totalRevenue())} <span>đồng</span>
         </p>
       </div>
     </>

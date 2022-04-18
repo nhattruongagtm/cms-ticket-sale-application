@@ -12,6 +12,7 @@ import { CheckingTicketData, TicketListData } from "../../models/Ticket";
 import { checkingFilter } from "../../slice/Filter/filterSlice";
 import { RootState } from "../../store";
 import { compareTo, formatDate, getNow } from "../../utils/dateTime";
+import { exportCSV, FormatKey } from "../../utils/exportCSV";
 import { filterCheckingList, search } from "../../utils/filter";
 interface Props {}
 
@@ -31,9 +32,8 @@ const CheckTicket = (props: Props) => {
   const [filterInput, setFilterInput] = useState<CheckingFilter>({
     status: -1,
     searchKey: "",
-    dateFrom: {day: 0, month: 0, year: 0},
-    dateTo: {day: 0, month: 0, year: 0},
-    
+    dateFrom: { day: 0, month: 0, year: 0 },
+    dateTo: { day: 0, month: 0, year: 0 },
   });
 
   const filterParams = useSelector(
@@ -94,13 +94,13 @@ const CheckTicket = (props: Props) => {
     setFilterInput({
       ...filterInput,
       dateFrom: date,
-    })
+    });
   };
   const hanldeGetDateTo = (date: DateTime) => {
     setFilterInput({
       ...filterInput,
       dateTo: date,
-    })
+    });
   };
 
   useEffect(() => {
@@ -133,6 +133,27 @@ const CheckTicket = (props: Props) => {
     isValidateCoupleDate !== 1 && dispatch(checkingFilter(filterInput));
   };
 
+  const handleDownloadCSVFile = () => {
+    const mapKey: FormatKey<TicketListData> = {
+      bookingCode: "Booking code",
+      checkInPort: "Cổng check-in",
+      checkStatus: "Trạng thái đối soát",
+      exportDate: "Ngày hết hạn",
+      name: "Tên sự kiện",
+      status: "Tình trạng sử dụng",
+      ticketNumber: "Số vé",
+      typeName: "Tên loại vé",
+      usingDate: "Ngày sử dụng",
+    };
+    exportCSV(
+      {
+        mapKey,
+        list: checkList,
+      },
+      "doi-soat-ve.csv",
+      "check-list"
+    );
+  };
   return (
     <div className="check__ticket">
       <div className="check__ticket__main">
@@ -153,7 +174,12 @@ const CheckTicket = (props: Props) => {
             <img src="./imgs/search.svg" alt="" />
           </div>
           <div className="check__ticket__action">
-            <button className="butto n ">Chốt đối soát</button>
+            <button
+              className="button button--fill"
+              onClick={handleDownloadCSVFile}
+            >
+              <a id="check-list">Chốt đối soát</a>
+            </button>
           </div>
         </div>
         <Table
